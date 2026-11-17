@@ -178,8 +178,17 @@
         const meta = d.meta;
         const cur = d.current_state;
 
-        document.getElementById("meta-line").textContent =
-          `BTC $${cur.btc_price.toLocaleString()} · As of ${meta.as_of_utc} · History: ${diag.history_days}d · Analogues: ${diag.analogues_found}/${diag.target_k} (Avg Dist: ${diag.avg_vector_distance} · FB Corr: ${diag.funding_basis_correlation})`;
+        const metaText = (livePx) =>
+          `${livePx ? `Live: $${livePx.toLocaleString()} · ` : ""}1H Close (${meta.as_of_utc.slice(0, 16).replace("T", " ")} UTC): $${cur.btc_price.toLocaleString()} · History: ${diag.history_days}d · Analogues: ${diag.analogues_found}/${diag.target_k} (Avg Dist: ${diag.avg_vector_distance} · FB Corr: ${diag.funding_basis_correlation})`;
+
+        document.getElementById("meta-line").textContent = metaText(null);
+        fetch("https://www.okx.com/api/v5/market/ticker?instId=BTC-USDT-SWAP")
+          .then(r => r.ok ? r.json() : null)
+          .then(t => {
+            const px = t && t.data && t.data[0] && Number(t.data[0].last);
+            if (px) document.getElementById("meta-line").textContent = metaText(px);
+          })
+          .catch(() => {});
 
         const q = diag.sample_quality.toLowerCase();
         const badge = document.getElementById("quality-badge");
