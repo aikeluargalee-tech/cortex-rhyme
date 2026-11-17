@@ -10,6 +10,7 @@ import glob
 import io
 import os
 import sys
+import time
 import zipfile
 from datetime import datetime, timezone
 from typing import Dict, Iterable, List, Optional, Tuple
@@ -192,7 +193,8 @@ def bulk_import(raw_dir: str, db_path: str = DB_PATH, neutral_fill_missing_deriv
 
     conn = init_db(db_path)
     cur = conn.cursor()
-    sorted_ts = sorted(swap_all.keys())
+    current_hour_ms = floor_to_hour_ms(int(time.time() * 1000))
+    sorted_ts = sorted(ts for ts in swap_all.keys() if ts < current_hour_ms)
     sorted_fund_ts = sorted(funding_all.keys())
     last_funding = funding_all[sorted_fund_ts[0]] if sorted_fund_ts else 0.0
     upserted = 0
