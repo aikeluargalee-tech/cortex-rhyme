@@ -299,6 +299,8 @@ def run_sync(target_bars: int = 1440) -> None:
 
     cur.execute("SELECT COUNT(*), MIN(iso_utc), MAX(iso_utc) FROM hourly_state WHERE oi_delta_24h IS NOT NULL")
     valid_count, min_dt, max_dt = cur.fetchone()
+    conn.execute("PRAGMA wal_checkpoint(TRUNCATE);")
+    conn.execute("PRAGMA journal_mode=DELETE;")
     conn.close()
     print(f"[OK] Upserted {upserted} rows. Total valid state vectors: {valid_count} ({min_dt} -> {max_dt})")
 

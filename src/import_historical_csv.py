@@ -256,6 +256,8 @@ def bulk_import(raw_dir: str, db_path: str = DB_PATH, neutral_fill_missing_deriv
 
     cur.execute("SELECT COUNT(*), MIN(iso_utc), MAX(iso_utc) FROM hourly_state")
     total_rows, min_dt, max_dt = cur.fetchone()
+    conn.execute("PRAGMA wal_checkpoint(TRUNCATE);")
+    conn.execute("PRAGMA journal_mode=DELETE;")
     conn.close()
     print(f"[OK] Bulk imported {upserted} bars. DB now holds {total_rows} hourly rows ({min_dt} -> {max_dt})")
 
