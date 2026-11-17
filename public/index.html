@@ -60,6 +60,17 @@
       margin-bottom: 16px;
       display: none;
     }
+    .summary-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--blue);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      font-size: 0.86rem;
+    }
+    .summary-box ul { list-style: none; display: grid; gap: 4px; }
+    .summary-box li strong { color: var(--text); }
     .grid-metrics {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -122,6 +133,7 @@
   </header>
 
   <div id="warning-banner" class="alert"></div>
+  <div id="summary-box" class="summary-box" style="display:none;"></div>
 
   <div class="grid-metrics" id="state-cards"></div>
 
@@ -131,12 +143,12 @@
       <thead>
         <tr>
           <th>Horizon</th>
-          <th>Setup Win %</th>
-          <th>Baseline Win %</th>
-          <th>Edge Lift</th>
-          <th>Setup Median</th>
-          <th>Baseline Med</th>
-          <th>Med Up / Med Down</th>
+          <th title="Percent of matching past setups that finished higher">Setup Win %</th>
+          <th title="Percent of all random hours that finished higher">Baseline Win %</th>
+          <th title="Setup Win % minus Baseline Win %">Edge Lift</th>
+          <th title="Typical (median) return after matching setups">Setup Median</th>
+          <th title="Typical (median) return after a random hour">Baseline Med</th>
+          <th title="Median gain on winners vs. median loss on losers">Med Up / Med Down</th>
         </tr>
       </thead>
       <tbody id="horizon-body"></tbody>
@@ -215,6 +227,31 @@
           { label: "Taker Buy Ratio", raw: r.taker_buy_ratio.toFixed(3), z: z.taker_buy_ratio },
         ];
 
+        const topDriver = [...features].sort((a, b) => Math.abs(b.z) - Math.abs(a.z))[0];
+        const s24 = d.after_similar_setups["24h"];
+        const e24 = d.edge_vs_baseline["24h"];
+        const qDesc = q === "solid"
+          ? `High confidence (${diag.analogues_found} distinct matches across ${diag.history_days}d).`
+          : q === "moderate"
+            ? `Moderate confidence (${diag.analogues_found} matches, avg dist ${diag.avg_vector_distance}).`
+            : `Low confidence (${diag.analogues_found} matches) — rare setup, do not over-size.`;
+        const skewDesc = diag.analogues_found === 0
+          ? "No historical analogues within distance threshold."
+          : s24.tail_skew_ratio > 0 && s24.tail_skew_ratio < 0.75
+            ? `Downside skew at +24h: losses (${fmtPct(s24.median_down_pct)}) outweigh wins (${fmtPct(s24.median_up_pct)}).`
+            : s24.tail_skew_ratio > 1.35
+              ? `Upside skew at +24h: wins (${fmtPct(s24.median_up_pct)}) outweigh losses (${fmtPct(s24.median_down_pct)}).`
+              : `Balanced +24h payoff (${fmtPct(s24.median_up_pct)} up / ${fmtPct(s24.median_down_pct)} down), ${e24.up_share_lift_pts > 0 ? "+" : ""}${e24.up_share_lift_pts.toFixed(1)} pts vs. baseline.`;
+        const sumBox = document.getElementById("summary-box");
+        sumBox.style.display = "block";
+        sumBox.innerHTML = `
+          <ul>
+            <li><strong>Quick Read (${q.toUpperCase()}):</strong> ${qDesc}</li>
+            <li><strong>24h Risk/Reward:</strong> ${skewDesc}</li>
+            <li><strong>Top Driver Now:</strong> ${topDriver.label} (${topDriver.z > 0 ? "+" : ""}${topDriver.z.toFixed(2)}σ)</li>
+          </ul>
+        `;
+
         document.getElementById("state-cards").innerHTML = features.map(f => {
           const clamped = Math.max(-3, Math.min(3, f.z));
           const pct = (Math.abs(clamped) / 3) * 50;
@@ -266,6 +303,7 @@
     }
 
     loadDashboard();
+    setInterval(loadDashboard, 300000);
   </script>
 </body>
 </html>
