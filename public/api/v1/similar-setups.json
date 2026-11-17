@@ -6,7 +6,7 @@
     "instrument": "BTC-USDT-SWAP",
     "status": "live",
     "as_of_utc": "2026-11-17T13:00:00Z",
-    "generated_at_utc": "2026-11-17T14:17:41Z",
+    "generated_at_utc": "2026-11-17T14:19:54Z",
     "history_sources": [
       "OKX Public v5 Keyless Archive"
     ],
@@ -37,7 +37,7 @@
     "baseline_hours_evaluated": 17058,
     "sample_quality": "thin",
     "avg_vector_distance": 2.638,
-    "funding_basis_correlation": 0.106,
+    "funding_basis_correlation": 0.109,
     "embargo_hours": 72,
     "declustering_hours": 24
   },
@@ -113,7 +113,7 @@
     {
       "timestamp_utc": "2026-10-10T06:00:00Z",
       "btc_price": 82706.2,
-      "distance": 2.634,
+      "distance": 2.635,
       "ret_4h_pct": 0.14,
       "ret_24h_pct": 0.5,
       "ret_72h_pct": 1.24

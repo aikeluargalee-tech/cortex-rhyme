@@ -52,7 +52,7 @@ jobs:
           print(f"[BACKFILL] Fetching ~{target_bars} hourly bars ({months} months) from OKX...")
           swap = fetch_paginated_candles("/api/v5/market/history-candles", "BTC-USDT-SWAP", target_bars)
           mark = fetch_paginated_candles("/api/v5/market/history-mark-price-candles", "BTC-USDT-SWAP", target_bars)
-          idx = fetch_paginated_candles("/api/v5/market/history-index-candles", "BTC-USDT", target_bars)
+          idx = fetch_paginated_candles("/api/v5/market/history-candles", "BTC-USDT", target_bars)
           funding = fetch_funding_history("BTC-USDT-SWAP", pages=funding_pages)
 
           def write_candle_csv(filename, data_map):

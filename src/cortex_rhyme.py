@@ -38,7 +38,8 @@ def causal_z_scores(values: List[float], window: int = 168) -> List[float]:
             continue
         mu = statistics.mean(slice_vals)
         sigma = statistics.stdev(slice_vals)
-        z_out.append((values[i] - mu) / sigma if sigma > 1e-12 else 0.0)
+        raw_z = (values[i] - mu) / sigma if sigma > 1e-12 else 0.0
+        z_out.append(max(-4.0, min(4.0, raw_z)))
     return z_out
 
 

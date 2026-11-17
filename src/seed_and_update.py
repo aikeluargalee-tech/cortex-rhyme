@@ -249,8 +249,8 @@ def run_sync(target_bars: int = 1440) -> None:
         mark_c = mark_candles[ts][3] if ts in mark_candles else c
         idx_c = index_candles[ts][3] if ts in index_candles else c
         basis_bps = ((mark_c - idx_c) / idx_c) * 10_000.0 if idx_c > 0 else 0.0
-        oi_usd = oi_map.get(ts)
-        taker_ratio = taker_map.get(ts)
+        oi_usd = oi_map.get(ts) if ts in oi_map else oi_map.get(ts - 3_600_000)
+        taker_ratio = taker_map.get(ts) if ts in taker_map else taker_map.get(ts - 3_600_000)
         iso_utc = datetime.fromtimestamp(ts / 1000.0, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         l2_val = live_l2 if ts == sorted_ts[-1] else None
 
