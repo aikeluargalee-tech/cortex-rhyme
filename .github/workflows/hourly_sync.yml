@@ -1,0 +1,42 @@
+name: CORTEX-RHYME Hourly Sync
+
+on:
+  schedule:
+    - cron: "5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-telemetry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Run Quantitative Sanity Suite
+        run: python3 -m unittest discover -s tests -p "test_*.py" -v
+
+      - name: Sync OKX 1H Telemetry into SQLite
+        run: python3 src/seed_and_update.py
+
+      - name: Run CORTEX-RHYME Mahalanobis Engine
+        run: python3 src/cortex_rhyme.py
+
+      - name: Commit updated SQLite archive and static JSON
+        run: |
+          git config user.name "cortex-rhyme-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add data/cortex_rhyme.db public/api/v1/similar-setups.json
+          if git diff --staged --quiet; then
+            echo "No telemetry changes to commit."
+          else
+            git commit -m "chore(telemetry): hourly state sync $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            git push
+          fi

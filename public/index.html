@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CORTEX-RHYME | BTC Regime Analogue Engine</title>
+  <style>
+    :root {
+      --bg: #0b0e14;
+      --card: #131822;
+      --border: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --green: #10b981;
+      --red: #ef4444;
+      --amber: #f59e0b;
+      --blue: #3b82f6;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
+      padding: 16px;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    h1 { font-size: 1.25rem; letter-spacing: 0.04em; font-family: var(--mono); }
+    .subtitle { font-size: 0.82rem; color: var(--muted); }
+    .badge {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+    .badge-solid { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid var(--green); }
+    .badge-moderate { background: rgba(59,130,246,0.15); color: var(--blue); border: 1px solid var(--blue); }
+    .badge-thin { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid var(--amber); }
+    .alert {
+      background: rgba(245,158,11,0.12);
+      border: 1px solid var(--amber);
+      color: #fcd34d;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .grid-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .card-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .card-val { font-family: var(--mono); font-size: 1.15rem; font-weight: 700; margin-top: 4px; }
+    .card-sub { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+    h2 { font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 18px 0 10px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+    th, td {
+      padding: 10px 12px;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--mono);
+    }
+    th:first-child, td:first-child { text-align: left; }
+    th { background: #171e2b; color: var(--muted); font-size: 0.75rem; text-transform: uppercase; }
+    .pos { color: var(--green); }
+    .neg { color: var(--red); }
+    .z-bar-wrap { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+    .z-track { flex: 1; height: 6px; background: #1f2937; border-radius: 4px; position: relative; overflow: hidden; }
+    .z-fill { height: 100%; position: absolute; top: 0; }
+    footer {
+      margin-top: 24px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    a { color: var(--blue); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>CORTEX-RHYME // BTC STATE ANALOGUES</h1>
+      <div class="subtitle" id="meta-line">Loading empirical telemetry...</div>
+    </div>
+    <div id="quality-badge" class="badge badge-thin">LOADING</div>
+  </header>
+
+  <div id="warning-banner" class="alert"></div>
+
+  <div class="grid-metrics" id="state-cards"></div>
+
+  <h2>Forward Return Conditioning vs. Unconditional Baseline</h2>
+  <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>Horizon</th>
+          <th>Setup Win %</th>
+          <th>Baseline Win %</th>
+          <th>Edge Lift</th>
+          <th>Setup Median</th>
+          <th>Baseline Med</th>
+          <th>Med Up / Med Down</th>
+        </tr>
+      </thead>
+      <tbody id="horizon-body"></tbody>
+    </table>
+  </div>
+
+  <h2>Closest De-Clustered Historical Analogues (Min 24h Spacing)</h2>
+  <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>Timestamp (UTC)</th>
+          <th>BTC Price</th>
+          <th>Vector Dist</th>
+          <th>+4h</th>
+          <th>+24h</th>
+          <th>+72h</th>
+        </tr>
+      </thead>
+      <tbody id="analogues-body"></tbody>
+    </table>
+  </div>
+
+  <footer>
+    <span>Observational historical statistics only — not a prediction or financial advice.</span>
+    <span><a href="./api/v1/similar-setups.json" target="_blank">JSON Endpoint</a> · <a href="https://github.com/aikeluargalee-tech/cortex-rhyme" target="_blank">Open Source Repo &amp; SKILL.md</a></span>
+  </footer>
+
+  <script>
+    const fmtPct = (v, sign = true) => `${sign && v > 0 ? "+" : ""}${Number(v).toFixed(2)}%`;
+    const clsVal = (v) => (v > 0 ? "pos" : v < 0 ? "neg" : "");
+
+    async function loadDashboard() {
+      try {
+        const res = await fetch("./api/v1/similar-setups.json?t=" + Date.now());
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const d = await res.json();
+        const diag = d.diagnostics;
+        const meta = d.meta;
+        const cur = d.current_state;
+
+        document.getElementById("meta-line").textContent =
+          `BTC $${cur.btc_price.toLocaleString()} · As of ${meta.as_of_utc} · History: ${diag.history_days}d · Analogues: ${diag.analogues_found}/${diag.target_k} (Avg Dist: ${diag.avg_vector_distance} · FB Corr: ${diag.funding_basis_correlation})`;
+
+        const q = diag.sample_quality.toLowerCase();
+        const badge = document.getElementById("quality-badge");
+        badge.textContent = `SAMPLE: ${q.toUpperCase()} (n=${diag.analogues_found})`;
+        badge.className = `badge badge-${q}`;
+
+        const ageHrs = (Date.now() - Date.parse(meta.as_of_utc)) / 3600000;
+        const warn = document.getElementById("warning-banner");
+        const warnings = [];
+        if (ageHrs > 2.5) warnings.push(`Stale feed alert: Last snapshot is ${ageHrs.toFixed(1)} hours old.`);
+        if (q === "thin") warnings.push("Thin sample grade: Fewer than 10 de-clustered analogues match current conditions. Treat as indicative only.");
+        if (warnings.length) {
+          warn.style.display = "block";
+          warn.textContent = warnings.join(" ");
+        }
+
+        const r = cur.raw_metrics;
+        const z = cur.z_vector;
+        const features = [
+          { label: "Funding (8h)", raw: `${r.funding_rate_pct}%`, z: z.funding_rate },
+          { label: "Perp Basis", raw: `${r.basis_bps} bps`, z: z.basis_bps },
+          { label: "OI Delta (24h)", raw: fmtPct(r.oi_delta_24h_pct), z: z.oi_delta_24h },
+          { label: "GK Vol (24h Ann)", raw: `${r.gk_vol_24h_ann_pct}%`, z: z.gk_vol_24h },
+          { label: "Taker Buy Ratio", raw: r.taker_buy_ratio.toFixed(3), z: z.taker_buy_ratio },
+        ];
+
+        document.getElementById("state-cards").innerHTML = features.map(f => {
+          const clamped = Math.max(-3, Math.min(3, f.z));
+          const pct = (Math.abs(clamped) / 3) * 50;
+          const left = clamped >= 0 ? 50 : 50 - pct;
+          const color = clamped >= 0 ? "var(--green)" : "var(--red)";
+          return `
+            <div class="card">
+              <div class="card-label">${f.label}</div>
+              <div class="card-val">${f.raw}</div>
+              <div class="card-sub">Z-Score: ${f.z > 0 ? "+" : ""}${f.z.toFixed(2)}σ</div>
+              <div class="z-bar-wrap">
+                <div class="z-track"><div class="z-fill" style="left:${left}%;width:${pct}%;background:${color};"></div></div>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+        const horizons = ["4h", "24h", "72h"];
+        document.getElementById("horizon-body").innerHTML = horizons.map(h => {
+          const s = d.after_similar_setups[h];
+          const b = d.baseline_all_hours[h];
+          const e = d.edge_vs_baseline[h];
+          return `
+            <tr>
+              <td><strong>+${h}</strong></td>
+              <td class="${clsVal(e.up_share_lift_pts)}"><strong>${s.up_share.toFixed(1)}%</strong></td>
+              <td>${b.up_share.toFixed(1)}%</td>
+              <td class="${clsVal(e.up_share_lift_pts)}">${e.up_share_lift_pts > 0 ? "+" : ""}${e.up_share_lift_pts.toFixed(1)} pts</td>
+              <td class="${clsVal(s.median_pct)}"><strong>${fmtPct(s.median_pct)}</strong></td>
+              <td class="${clsVal(b.median_pct)}">${fmtPct(b.median_pct)}</td>
+              <td><span class="pos">${fmtPct(s.median_up_pct)}</span> / <span class="neg">${fmtPct(s.median_down_pct)}</span></td>
+            </tr>
+          `;
+        }).join("");
+
+        document.getElementById("analogues-body").innerHTML = d.top_analogues.map(a => `
+          <tr>
+            <td>${a.timestamp_utc.replace("T", " ").replace("Z", "")}</td>
+            <td>$${a.btc_price.toLocaleString()}</td>
+            <td>${a.distance.toFixed(3)}</td>
+            <td class="${clsVal(a.ret_4h_pct)}">${fmtPct(a.ret_4h_pct)}</td>
+            <td class="${clsVal(a.ret_24h_pct)}">${fmtPct(a.ret_24h_pct)}</td>
+            <td class="${clsVal(a.ret_72h_pct)}">${fmtPct(a.ret_72h_pct)}</td>
+          </tr>
+        `).join("");
+      } catch (err) {
+        document.getElementById("meta-line").textContent = "Error loading telemetry JSON: " + err.message;
+      }
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>

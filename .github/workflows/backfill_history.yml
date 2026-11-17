@@ -1,0 +1,94 @@
+name: CORTEX-RHYME Multi-Year Historical Backfill
+
+on:
+  workflow_dispatch:
+    inputs:
+      months_back:
+        description: "Number of months to backfill (e.g., 24 for 2 years, 36 for 3 years)"
+        required: true
+        default: "24"
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  backfill-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Download multi-year OKX 1H candles & funding into data/raw_csv
+        env:
+          MONTHS_BACK: ${{ inputs.months_back }}
+        run: |
+          python3 - <<'EOF'
+          import csv
+          import os
+          import sys
+          sys.path.insert(0, "src")
+          from seed_and_update import (
+              fetch_funding_history,
+              fetch_paginated_candles,
+          )
+          months = int(os.environ.get("MONTHS_BACK", "24"))
+          target_bars = months * 30 * 24
+          funding_pages = max(10, (months * 30 * 3) // 100 + 2)
+          raw_dir = os.path.join("data", "raw_csv")
+          os.makedirs(raw_dir, exist_ok=True)
+          print(f"[BACKFILL] Fetching ~{target_bars} hourly bars ({months} months) from OKX...")
+          swap = fetch_paginated_candles("/api/v5/market/history-candles", "BTC-USDT-SWAP", target_bars)
+          mark = fetch_paginated_candles("/api/v5/market/history-mark-price-candles", "BTC-USDT-SWAP", target_bars)
+          idx = fetch_paginated_candles("/api/v5/market/history-index-candles", "BTC-USDT", target_bars)
+          funding = fetch_funding_history("BTC-USDT-SWAP", pages=funding_pages)
+
+          def write_candle_csv(filename, data_map):
+              path = os.path.join(raw_dir, filename)
+              with open(path, "w", newline="", encoding="utf-8") as f:
+                  w = csv.writer(f)
+                  w.writerow(["ts", "o", "h", "l", "c", "vol", "volCcy"])
+                  for ts in sorted(data_map.keys()):
+                      vals = data_map[ts]
+                      vol_ccy = vals[4] if len(vals) > 4 else 0.0
+                      w.writerow([ts, vals[0], vals[1], vals[2], vals[3], 0.0, vol_ccy])
+              print(f"[SAVED] {path} ({len(data_map)} rows)")
+
+          write_candle_csv("BTC-USDT-SWAP-1H-backfill.csv", swap)
+          write_candle_csv("BTC-USDT-SWAP-mark-price-1H-backfill.csv", mark)
+          write_candle_csv("BTC-USDT-index-1H-backfill.csv", idx)
+          fund_path = os.path.join(raw_dir, "BTC-USDT-SWAP-funding-rate-backfill.csv")
+          with open(fund_path, "w", newline="", encoding="utf-8") as f:
+              w = csv.writer(f)
+              w.writerow(["instId", "fundingTime", "fundingRate", "realizedRate"])
+              for ts in sorted(funding.keys()):
+                  w.writerow(["BTC-USDT-SWAP", ts, funding[ts], funding[ts]])
+          print(f"[SAVED] {fund_path} ({len(funding)} settlements)")
+          EOF
+
+      - name: Import CSVs into SQLite & sync live derivatives
+        run: python3 src/seed_and_update.py --import-csv data/raw_csv
+
+      - name: Recompute Mahalanobis analogues & update static JSON
+        run: python3 src/cortex_rhyme.py
+
+      - name: Clean temporary raw CSVs (keep SQLite DB)
+        run: rm -f data/raw_csv/*.csv
+
+      - name: Commit multi-year SQLite database and updated JSON
+        run: |
+          git config user.name "cortex-rhyme-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add data/cortex_rhyme.db public/api/v1/similar-setups.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore(backfill): seed ${{ inputs.months_back }}-month multi-regime history"
+            git push
+          fi
