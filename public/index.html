@@ -3,20 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CORTEX-RHYME | BTC Regime Analogue Engine (MOD 63)</title>
+  <title>CORTEX-RHYME | Bitcoin Historical Pattern Check</title>
   <style>
     :root {
       --bg: #0b0e14;
       --card: #131822;
       --card-alt: #171e2b;
       --border: #1f2937;
-      --text: #e5e7eb;
+      --text: #f3f4f6;
       --muted: #9ca3af;
       --green: #10b981;
       --red: #ef4444;
       --amber: #f59e0b;
       --blue: #3b82f6;
-      --purple: #a855f7;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,7 +23,7 @@
       background: var(--bg);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      line-height: 1.5;
+      line-height: 1.55;
       padding: 16px;
       max-width: 960px;
       margin: 0 auto;
@@ -34,19 +33,14 @@
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 12px;
+      gap: 10px;
       padding-bottom: 14px;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
-    h1 { font-size: 1.2rem; letter-spacing: 0.04em; font-family: var(--mono); }
-    .subtitle { font-size: 0.82rem; color: var(--muted); margin-top: 3px; font-family: var(--mono); }
-    .badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
+    h1 { font-size: 1.22rem; letter-spacing: 0.02em; }
+    .subtitle { font-size: 0.84rem; color: var(--muted); margin-top: 3px; }
+    .badge-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
     .badge {
       font-family: var(--mono);
       font-size: 0.74rem;
@@ -54,7 +48,6 @@
       padding: 4px 10px;
       border-radius: 6px;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
     }
     .badge-solid { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid var(--green); }
     .badge-moderate { background: rgba(59,130,246,0.15); color: var(--blue); border: 1px solid var(--blue); }
@@ -62,26 +55,77 @@
     .badge-bull { background: rgba(16,185,129,0.12); color: var(--green); border: 1px solid rgba(16,185,129,0.5); }
     .badge-bear { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.5); }
 
-    .posture-bar {
+    .verdict-card {
+      background: linear-gradient(180deg, #161d2b 0%, #111621 100%);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--blue);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+    .verdict-card.v-buy { border-left-color: var(--green); }
+    .verdict-card.v-sell { border-left-color: var(--red); }
+    .verdict-card.v-wait { border-left-color: var(--amber); }
+    .verdict-card.v-neutral { border-left-color: var(--blue); }
+
+    .verdict-top {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
-      background: var(--card);
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .verdict-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .verdict-trust {
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--card-alt);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
+    }
+    .verdict-headline {
+      font-size: 1.28rem;
+      font-weight: 800;
+      line-height: 1.3;
       margin-bottom: 12px;
     }
-    .posture-left { display: flex; flex-direction: column; gap: 2px; }
-    .posture-kicker { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-family: var(--mono); }
-    .posture-title { font-family: var(--mono); font-size: 0.98rem; font-weight: 700; }
-    .posture-ev { font-family: var(--mono); font-size: 0.85rem; padding: 5px 10px; border-radius: 6px; background: var(--card-alt); border: 1px solid var(--border); }
-    .posture-pos { border-left: 4px solid var(--green); }
-    .posture-neg { border-left: 4px solid var(--red); }
-    .posture-neu { border-left: 4px solid var(--blue); }
-    .posture-thin { border-left: 4px solid var(--amber); }
+    .v-buy .verdict-headline { color: var(--green); }
+    .v-sell .verdict-headline { color: var(--red); }
+    .v-wait .verdict-headline { color: #fbbf24; }
+    .v-neutral .verdict-headline { color: #60a5fa; }
+
+    .verdict-points {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+    }
+    .v-box {
+      background: rgba(11, 14, 20, 0.65);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 13px;
+    }
+    .v-box-title {
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .v-box-body {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
 
     .controls-bar {
       display: flex;
@@ -103,59 +147,30 @@
       background: transparent;
       border: none;
       color: var(--muted);
-      font-family: var(--mono);
-      font-size: 0.76rem;
+      font-size: 0.78rem;
       font-weight: 600;
       padding: 6px 10px;
       border-radius: 6px;
       cursor: pointer;
-      transition: all 0.15s ease;
     }
     .seg-btn:hover { color: var(--text); }
-    .seg-btn.active {
-      background: var(--blue);
-      color: #ffffff;
-    }
-    .seg-btn .pill-tag {
-      font-size: 0.66rem;
-      opacity: 0.85;
-      margin-left: 4px;
-    }
+    .seg-btn.active { background: var(--blue); color: #ffffff; }
+    .seg-btn .pill-tag { font-family: var(--mono); font-size: 0.68rem; opacity: 0.9; margin-left: 4px; }
 
-    .alert {
-      background: rgba(245,158,11,0.12);
-      border: 1px solid var(--amber);
-      color: #fcd34d;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 0.83rem;
-      margin-bottom: 12px;
-      display: none;
-    }
     .info-banner {
       background: rgba(59,130,246,0.12);
-      border: 1px solid rgba(59,130,246,0.5);
+      border: 1px solid rgba(59,130,246,0.45);
       color: #93c5fd;
       padding: 9px 14px;
       border-radius: 8px;
-      font-size: 0.82rem;
-      margin-bottom: 12px;
+      font-size: 0.83rem;
+      margin-bottom: 14px;
       display: none;
     }
-    .quick-read {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
-      margin-bottom: 16px;
-      font-size: 0.85rem;
-    }
-    .quick-read ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
-    .quick-read li::before { content: "• "; color: var(--blue); font-weight: bold; }
 
     .grid-metrics {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
       gap: 10px;
       margin-bottom: 18px;
     }
@@ -164,17 +179,14 @@
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 13px;
-      transition: opacity 0.15s ease;
     }
-    .card.dimmed {
-      opacity: 0.48;
-      border-style: dashed;
-    }
+    .card.dimmed { opacity: 0.45; border-style: dashed; }
     .card-top { display: flex; justify-content: space-between; align-items: center; gap: 4px; }
-    .card-label { font-size: 0.73rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .card-label { font-size: 0.74rem; color: var(--muted); text-transform: uppercase; font-weight: 600; }
     .card-tag { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); background: var(--card-alt); padding: 1px 5px; border-radius: 4px; }
     .card-val { font-family: var(--mono); font-size: 1.12rem; font-weight: 700; margin-top: 4px; }
-    .card-sub { font-family: var(--mono); font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
+    .card-plain { font-size: 0.8rem; color: #d1d5db; margin-top: 3px; font-weight: 500; }
+    .card-sub { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
     .z-bar-wrap { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
     .z-track { flex: 1; height: 6px; background: #1f2937; border-radius: 4px; position: relative; overflow: hidden; }
     .z-fill { height: 100%; position: absolute; top: 0; }
@@ -185,9 +197,10 @@
       justify-content: space-between;
       align-items: center;
       gap: 8px;
-      margin: 18px 0 10px;
+      margin: 18px 0 8px;
     }
-    h2 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+    h2 { font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    .table-hint { font-size: 0.78rem; color: var(--muted); }
     .table-wrap { overflow-x: auto; }
     table {
       width: 100%;
@@ -199,22 +212,18 @@
       font-size: 0.85rem;
     }
     th, td {
-      padding: 9px 11px;
+      padding: 10px 11px;
       text-align: right;
       border-bottom: 1px solid var(--border);
       font-family: var(--mono);
       white-space: nowrap;
     }
-    th:first-child, td:first-child { text-align: left; }
+    th:first-child, td:first-child { text-align: left; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     th { background: var(--card-alt); color: var(--muted); font-size: 0.72rem; text-transform: uppercase; }
     .pos { color: var(--green); }
     .neg { color: var(--red); }
-    .regime-pill {
-      font-size: 0.68rem;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-weight: 600;
-    }
+    .regime-pill { font-size: 0.68rem; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+
     footer {
       margin-top: 24px;
       padding-top: 14px;
@@ -232,60 +241,67 @@
 <body>
   <header>
     <div>
-      <h1>CORTEX-RHYME // BTC STATE ANALOGUES</h1>
-      <div class="subtitle" id="meta-line">Loading empirical telemetry...</div>
+      <h1>CORTEX-RHYME // Bitcoin History Check</h1>
+      <div class="subtitle" id="meta-line">Loading live Bitcoin market data...</div>
     </div>
     <div class="badge-row">
-      <div id="trend-badge" class="badge badge-bull">200D SMA: --</div>
+      <div id="trend-badge" class="badge badge-bull">200D Trend: --</div>
       <div id="quality-badge" class="badge badge-thin">LOADING</div>
     </div>
   </header>
 
-  <div id="posture-bar" class="posture-bar posture-neu">
-    <div class="posture-left">
-      <span class="posture-kicker" id="posture-kicker">24H CONDITIONAL EXPECTANCY POSTURE (MOD 63)</span>
-      <span class="posture-title" id="posture-title">Evaluating state-space distribution...</span>
+  <section id="verdict-card" class="verdict-card v-neutral">
+    <div class="verdict-top">
+      <span class="verdict-eyebrow">Bottom-Line Verdict (Plain English)</span>
+      <span class="verdict-trust" id="verdict-trust">Checking historical matches...</span>
     </div>
-    <div class="posture-ev" id="posture-ev">24h EV: --</div>
-  </div>
+    <div class="verdict-headline" id="verdict-headline">Analyzing how Bitcoin behaved in similar past setups...</div>
+    <div class="verdict-points">
+      <div class="v-box">
+        <div class="v-box-title">1. What Usually Happens Next (24h – 72h)</div>
+        <div class="v-box-body" id="verdict-next">Calculating past win vs. loss outcomes...</div>
+      </div>
+      <div class="v-box">
+        <div class="v-box-title">2. What Is Happening Right Now</div>
+        <div class="v-box-body" id="verdict-now">Reading live futures &amp; order flow...</div>
+      </div>
+      <div class="v-box">
+        <div class="v-box-title">3. Risk &amp; Sizing Takeaway</div>
+        <div class="v-box-body" id="verdict-risk">Evaluating upside vs. downside danger...</div>
+      </div>
+    </div>
+  </section>
 
   <div class="controls-bar">
-    <div class="segmented" role="group" aria-label="State-Space Lens Selector">
-      <button id="btn-lens-5d" class="seg-btn" type="button">5D Microstructure <span class="pill-tag" id="tag-5d">--</span></button>
-      <button id="btn-lens-3d" class="seg-btn" type="button">3D Deep Carry-Vol <span class="pill-tag" id="tag-3d">--</span></button>
+    <div class="segmented" role="group" aria-label="History Comparison Mode">
+      <button id="btn-lens-5d" class="seg-btn" type="button">Full 5-Factor Match <span class="pill-tag" id="tag-5d">--</span></button>
+      <button id="btn-lens-3d" class="seg-btn" type="button">2-Year Carry &amp; Vol Match <span class="pill-tag" id="tag-3d">--</span></button>
     </div>
 
-    <div class="segmented" role="group" aria-label="Trend Conditioning Scope">
-      <button id="btn-scope-all" class="seg-btn active" type="button">All Regimes</button>
-      <button id="btn-scope-regime" class="seg-btn" type="button">200D Trend-Matched</button>
+    <div class="segmented" role="group" aria-label="Trend Filter">
+      <button id="btn-scope-all" class="seg-btn active" type="button">All Market Trends</button>
+      <button id="btn-scope-regime" class="seg-btn" type="button">Same 200D Trend Only</button>
     </div>
   </div>
 
   <div id="fallback-banner" class="info-banner"></div>
-  <div id="warning-banner" class="alert"></div>
-
-  <div class="quick-read" id="quick-read-box">
-    <ul id="quick-read-list">
-      <li>Initializing state-space summary...</li>
-    </ul>
-  </div>
 
   <div class="grid-metrics" id="state-cards"></div>
 
   <div class="section-header">
-    <h2 id="horizon-title">Forward Return Conditioning vs. Unconditional Baseline</h2>
+    <h2 id="horizon-title">What Happened After Similar Setups?</h2>
+    <span class="table-hint">Compared against an ordinary random hour</span>
   </div>
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th>Horizon</th>
-          <th title="Percent of matching past setups that finished higher">Setup Win %</th>
-          <th title="Percent of all random hours that finished higher">Baseline Win %</th>
-          <th title="Setup Win % minus Baseline Win %">Edge Lift</th>
-          <th title="Typical (median) return after matching setups">Setup Median</th>
-          <th title="Typical (median) return after a random hour">Baseline Med</th>
-          <th title="Median gain on winners vs. median loss on losers">Med Up / Med Down</th>
+          <th>Time Later</th>
+          <th>Went Up %</th>
+          <th>Normal Day %</th>
+          <th>Advantage</th>
+          <th>Typical Move</th>
+          <th>Typical Gain vs. Typical Drop</th>
         </tr>
       </thead>
       <tbody id="horizon-body"></tbody>
@@ -293,19 +309,20 @@
   </div>
 
   <div class="section-header">
-    <h2 id="analogues-title">Closest De-Clustered Historical Analogues (Min 24h Spacing)</h2>
+    <h2 id="analogues-title">Closest Past Dates That Looked Like Today</h2>
+    <span class="table-hint">At least 24 hours apart so one event isn't counted twice</span>
   </div>
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th>Timestamp (UTC)</th>
-          <th>BTC Price</th>
-          <th>200D Trend</th>
-          <th title="Mahalanobis distance from current state (lower = closer match)">Mahalanobis Dist</th>
-          <th>+4h</th>
-          <th>+24h</th>
-          <th>+72h</th>
+          <th>Past Date (UTC)</th>
+          <th>BTC Price Then</th>
+          <th>200D Trend Then</th>
+          <th>Match Distance</th>
+          <th>+4 Hours</th>
+          <th>+1 Day (24h)</th>
+          <th>+3 Days (72h)</th>
         </tr>
       </thead>
       <tbody id="analogues-body"></tbody>
@@ -313,39 +330,49 @@
   </div>
 
   <footer>
-    <span>Observational historical statistics only — not a prediction or financial advice.</span>
-    <span><a href="./api/v1/similar-setups.json" target="_blank">JSON Endpoint</a> · <a href="https://github.com/aikeluargalee-tech/cortex-rhyme" target="_blank">Open Source Repo &amp; SKILL.md</a></span>
+    <span>Historical statistics only — not financial advice or a price guarantee.</span>
+    <span><a href="./api/v1/similar-setups.json" target="_blank">Raw JSON Data</a> · <a href="https://github.com/aikeluargalee-tech/cortex-rhyme" target="_blank">GitHub &amp; SKILL.md</a></span>
   </footer>
 
   <script>
     const fmtPct = (v, sign = true) => `${sign && v > 0 ? "+" : ""}${Number(v).toFixed(2)}%`;
     const clsVal = (v) => (v > 0 ? "pos" : v < 0 ? "neg" : "");
 
-    const POSTURE_LABELS = {
-      POSITIVE_SKEW_LOOP_A: {
-        text: "POSITIVE SKEW — DIBSE Loop A (USDT → BTC) Favored",
-        css: "posture-pos"
-      },
-      NEGATIVE_SKEW_LOOP_B: {
-        text: "NEGATIVE SKEW — DIBSE Loop B (BTC → USDT) / Trim Favored",
-        css: "posture-neg"
-      },
-      NEUTRAL_CHOP: {
-        text: "NEUTRAL CHOP — No Statistically Significant Baseline Lift",
-        css: "posture-neu"
-      },
-      OUTLIER_THIN_ZERO_WEIGHT: {
-        text: "OUTLIER / THIN SAMPLE — Assign 0.0x Analogue Sizing Weight",
-        css: "posture-thin"
+    function describeMetricPlain(key, z, raw) {
+      if (key === "funding_rate") {
+        if (z >= 1.5) return "Longs paying high fees (crowded)";
+        if (z <= -1.5) return "Shorts paying fees (bearish crowd)";
+        return raw.funding_rate_pct >= 0 ? "Normal mildly positive funding" : "Slightly negative funding";
       }
-    };
+      if (key === "basis_bps") {
+        if (z >= 1.5) return "Futures trading well above spot";
+        if (z <= -1.5) return "Futures trading at steep discount";
+        return raw.basis_bps >= 0 ? "Futures slightly above spot" : "Futures slightly below spot";
+      }
+      if (key === "oi_delta_24h") {
+        if (z >= 1.5) return "Heavy new leverage piling in";
+        if (z <= -1.5) return "Positions closing / flushing out";
+        return "Steady open positions (24h)";
+      }
+      if (key === "gk_vol_24h") {
+        if (z >= 1.5) return "Unusually wild price swings";
+        if (z <= -1.0) return "Quiet / compressed price swings";
+        return "Normal 24h price volatility";
+      }
+      if (key === "taker_buy_ratio") {
+        if (z >= 1.5) return "Aggressive market buying";
+        if (z <= -1.5) return "Aggressive market selling";
+        return "Balanced market buyers & sellers";
+      }
+      return "";
+    }
 
     const FEATURE_META = [
-      { key: "funding_rate", label: "Funding (8h)", fmt: (r) => `${r.funding_rate_pct}%`, in3d: true },
-      { key: "basis_bps", label: "Perp Basis", fmt: (r) => `${r.basis_bps} bps`, in3d: true },
-      { key: "oi_delta_24h", label: "OI Delta (24h)", fmt: (r) => fmtPct(r.oi_delta_24h_pct), in3d: false },
-      { key: "gk_vol_24h", label: "GK Vol (24h Ann)", fmt: (r) => `${r.gk_vol_24h_ann_pct}%`, in3d: true },
-      { key: "taker_buy_ratio", label: "Taker Buy Ratio", fmt: (r) => Number(r.taker_buy_ratio).toFixed(3), in3d: false }
+      { key: "funding_rate", label: "Funding Rate (8h)", fmt: (r) => `${r.funding_rate_pct}%`, in3d: true },
+      { key: "basis_bps", label: "Futures vs. Spot Gap", fmt: (r) => `${r.basis_bps} bps`, in3d: true },
+      { key: "oi_delta_24h", label: "24h Open Positions", fmt: (r) => fmtPct(r.oi_delta_24h_pct), in3d: false },
+      { key: "gk_vol_24h", label: "24h Price Volatility", fmt: (r) => `${r.gk_vol_24h_ann_pct}%`, in3d: true },
+      { key: "taker_buy_ratio", label: "Buyer vs. Seller Flow", fmt: (r) => `${(Number(r.taker_buy_ratio) * 100).toFixed(1)}% Buys`, in3d: false }
     ];
 
     let payload = null;
@@ -370,7 +397,6 @@
       }
       const fallbackLens = {
         lens_id: "5D_MICROSTRUCTURE",
-        dimensions: ["funding_rate", "basis_bps", "oi_delta_24h", "gk_vol_24h", "taker_buy_ratio"],
         diagnostics: d.diagnostics,
         after_similar_setups: d.after_similar_setups,
         baseline_all_hours: d.baseline_all_hours,
@@ -384,6 +410,79 @@
         "5D_MICROSTRUCTURE": fallbackLens,
         "3D_DEEP_CARRY_VOL": fallbackLens
       };
+    }
+
+    function buildPlainEnglishVerdict(q, activeN, historyDays, setupObj, edgeObj, regCtx, z, raw, ageHrs) {
+      const s24 = setupObj["24h"];
+      const s72 = setupObj["72h"];
+      const lift24 = edgeObj["24h"].up_share_lift_pts;
+      const up24 = s24.up_share;
+      const down24 = (100 - up24).toFixed(1);
+      const gain24 = s24.median_up_pct;
+      const loss24 = Math.abs(s24.median_down_pct);
+      const isBull = regCtx.trend_regime === "ABOVE_200D_SMA";
+
+      let trustLabel = "";
+      if (ageHrs > 2.5) {
+        trustLabel = `Outdated Data (${ageHrs.toFixed(1)}h old)`;
+      } else if (q === "thin") {
+        trustLabel = `Low Reliability (Only ${activeN} rare matches)`;
+      } else if (q === "moderate") {
+        trustLabel = `Medium Reliability (${activeN} matches over ${historyDays}d)`;
+      } else {
+        trustLabel = `High Reliability (${activeN} matches over ${historyDays}d)`;
+      }
+
+      let cardClass = "v-neutral";
+      let headline = "";
+      let riskAdvice = "";
+
+      const severeDownsideCliff = loss24 > gain24 * 1.5 && loss24 >= 1.5;
+      const strongUpsideSkew = gain24 > loss24 * 1.2 && up24 >= 55 && lift24 >= 5.0;
+      const ratioTxt = gain24 > 0 ? `${(loss24 / gain24).toFixed(1)}x` : "much";
+
+      if (q === "thin") {
+        cardClass = "v-wait";
+        if (severeDownsideCliff) {
+          headline = `WAIT / DO NOT CHASE — Rare setup, and past drops were ${ratioTxt} larger than bounces`;
+          riskAdvice = `Only ${activeN} similar days exist in this view, so confidence is low. Worse, when it dropped after 24h, the typical loss (-${loss24.toFixed(2)}%) was much bigger than the typical bounce (+${gain24.toFixed(2)}%). Stay patient and avoid big bets.`;
+        } else {
+          headline = "WAIT / RARE MARKET STATE — Too few past matches to trust";
+          riskAdvice = `We only found ${activeN} similar days in history. Because today's market behavior is unusual, historical odds are unreliable—do not over-size trades based on this alone.`;
+        }
+      } else if (strongUpsideSkew) {
+        cardClass = "v-buy";
+        headline = "FAVORABLE FOR BUYING — History shows strong bounces over the next 1–3 days";
+        riskAdvice = `In ${activeN} similar past setups, Bitcoin rose ${up24.toFixed(0)}% of the time over 24 hours (+${lift24.toFixed(1)}% better than normal), with typical gains (+${gain24.toFixed(2)}%) beating typical losses (-${loss24.toFixed(2)}%).`;
+      } else if (severeDownsideCliff || (up24 <= 42 && lift24 <= -5.0)) {
+        cardClass = "v-sell";
+        headline = "CAUTION / DOWNSIDE RISK — Similar setups often led to sharp drops";
+        riskAdvice = `History leans bearish here: over 24–72 hours, downside moves (-${loss24.toFixed(2)}% at 24h, ${s72.median_down_pct.toFixed(2)}% at 72h) outweighed upside bounces. Good environment to protect capital or trim rather than chase longs.`;
+      } else {
+        cardClass = "v-neutral";
+        headline = "NO CLEAR EDGE (COIN FLIP) — History shows mixed, ordinary movement";
+        riskAdvice = `Across ${activeN} similar past setups, Bitcoin went up ${up24.toFixed(0)}% of the time and down ${down24}% of the time—almost identical to a normal day. Wait for stronger order-flow confirmation before acting.`;
+      }
+
+      const nextText = activeN === 0
+        ? "No past dates matched closely enough to calculate future odds."
+        : `Over the next <strong>24 hours</strong>, Bitcoin went up <strong>${up24.toFixed(0)}%</strong> of the time (typical gain <strong>+${gain24.toFixed(2)}%</strong>) and fell <strong>${down24}%</strong> of the time (typical drop <strong>-${loss24.toFixed(2)}%</strong>). By <strong>3 days (72h)</strong>, typical wins were <strong>+${s72.median_up_pct.toFixed(2)}%</strong> vs. typical drops of <strong>${s72.median_down_pct.toFixed(2)}%</strong>.`;
+
+      const activeDims = selectedLensKey === "3D_DEEP_CARRY_VOL"
+        ? FEATURE_META.filter(f => f.in3d)
+        : FEATURE_META;
+      const topDriver = activeDims.reduce((best, item) =>
+        Math.abs(z[item.key]) > Math.abs(z[best.key]) ? item : best
+      , activeDims[0]);
+
+      const driverPlain = describeMetricPlain(topDriver.key, z[topDriver.key], raw);
+      const trendPlain = isBull
+        ? `above its 200-day average ($${Number(regCtx.sma_200d).toLocaleString()}), meaning the bigger trend is still up`
+        : `below its 200-day average ($${Number(regCtx.sma_200d).toLocaleString()}), meaning the bigger trend is weak`;
+
+      const nowText = `Main signal: <strong>${driverPlain}</strong> (${topDriver.label}: ${topDriver.fmt(raw)}). Overall, Bitcoin is trading ${trendPlain}.`;
+
+      return { cardClass, trustLabel, headline, nextText, nowText, riskAdvice };
     }
 
     function renderView() {
@@ -402,88 +501,54 @@
 
       const d5 = lenses["5D_MICROSTRUCTURE"].diagnostics;
       const d3 = lenses["3D_DEEP_CARRY_VOL"].diagnostics;
-      document.getElementById("tag-5d").textContent = `${d5.sample_quality.toUpperCase()} · ${d5.history_days}d`;
-      document.getElementById("tag-3d").textContent = `${d3.sample_quality.toUpperCase()} · ${d3.history_days}d`;
+      document.getElementById("tag-5d").textContent = `${d5.analogues_found} matches · ${d5.history_days}d`;
+      document.getElementById("tag-3d").textContent = `${d3.analogues_found} matches · ${d3.history_days}d`;
 
       const closeLabel = meta.as_of_utc.replace("T", " ").replace(":00Z", " UTC");
-      const livePrefix = liveTickerPrice ? `Live: $${liveTickerPrice.toLocaleString()} · ` : "";
+      const livePrefix = liveTickerPrice ? `Live BTC: $${liveTickerPrice.toLocaleString()} · ` : "";
       const activeN = selectedScope === "regime" ? (diag.regime_analogues_found ?? diag.analogues_found) : diag.analogues_found;
-      const activeDist = selectedScope === "regime" ? (diag.regime_avg_distance ?? diag.avg_vector_distance) : diag.avg_vector_distance;
       document.getElementById("meta-line").textContent =
-        `${livePrefix}1H Close (${closeLabel}): $${cur.btc_price.toLocaleString()} · History: ${diag.history_days}d · Analogues: ${activeN}/${diag.target_k} (Avg Dist: ${activeDist} · FB Corr: ${diag.funding_basis_correlation})`;
+        `${livePrefix}Last Hourly Close (${closeLabel}): $${cur.btc_price.toLocaleString()} · Searched ${diag.history_days} days of history`;
 
       const regCtx = cur.regime_context || { trend_regime: "ABOVE_200D_SMA", sma_200d: 0, distance_from_sma_200d_pct: 0 };
       const isBull = regCtx.trend_regime === "ABOVE_200D_SMA";
       const trendBadge = document.getElementById("trend-badge");
       trendBadge.className = `badge ${isBull ? "badge-bull" : "badge-bear"}`;
-      trendBadge.textContent = `${isBull ? "ABOVE" : "BELOW"} 200D SMA (${fmtPct(regCtx.distance_from_sma_200d_pct)})`;
+      trendBadge.textContent = `${isBull ? "Uptrend (Above" : "Downtrend (Below"} 200D Avg)`;
 
       const rawQ = selectedScope === "regime" ? (diag.regime_sample_quality || diag.sample_quality) : diag.sample_quality;
       const q = rawQ.toLowerCase();
       const qBadge = document.getElementById("quality-badge");
-      qBadge.textContent = `SAMPLE: ${q.toUpperCase()} (n=${activeN})`;
+      const qPlain = q === "solid" ? "HIGH CONFIDENCE" : q === "moderate" ? "MEDIUM CONFIDENCE" : "LOW CONFIDENCE";
+      qBadge.textContent = `${qPlain} (${activeN} MATCHES)`;
       qBadge.className = `badge badge-${q}`;
 
-      const postureKey = q === "thin" ? "OUTLIER_THIN_ZERO_WEIGHT" : (diag.posture_verdict || "NEUTRAL_CHOP");
-      const pInfo = POSTURE_LABELS[postureKey] || POSTURE_LABELS.NEUTRAL_CHOP;
-      const postureBar = document.getElementById("posture-bar");
-      postureBar.className = `posture-bar ${pInfo.css}`;
-      document.getElementById("posture-kicker").textContent =
-        `24H CONDITIONAL EXPECTANCY POSTURE · LENS: ${selectedLensKey.replace(/_/g, " ")} · 200D SMA: $${Number(regCtx.sma_200d).toLocaleString()}`;
-      document.getElementById("posture-title").textContent = pInfo.text;
-      const evVal = diag.conditional_ev_24h_pct ?? 0.0;
-      document.getElementById("posture-ev").innerHTML = `24h Cond. EV: <strong class="${clsVal(evVal)}">${fmtPct(evVal)}</strong>`;
-
       const fbBanner = document.getElementById("fallback-banner");
-      if (d.diagnostics && d.diagnostics.fallback_triggered && d.diagnostics.fallback_reason) {
+      if (d.diagnostics && d.diagnostics.fallback_triggered) {
         fbBanner.style.display = "block";
-        fbBanner.textContent = `Auto-Arbitration Active: ${d.diagnostics.fallback_reason}`;
+        fbBanner.textContent = "Note: Today's order flow is unusual, so we automatically switched to the 2-Year Carry & Volatility view to find more historical matches. You can switch views anytime using the buttons above.";
       } else {
         fbBanner.style.display = "none";
-      }
-
-      const ageHrs = (Date.now() - Date.parse(meta.as_of_utc)) / 3600000;
-      const warn = document.getElementById("warning-banner");
-      const warnings = [];
-      if (ageHrs > 2.5) warnings.push(`Stale feed alert: Last snapshot is ${ageHrs.toFixed(1)} hours old (exceeds MOD 36 2.5h SLA).`);
-      if (q === "thin") warnings.push("Thin sample grade: Fewer than 10 de-clustered analogues match current conditions. Treat as indicative only (0.0x sizing modifier).");
-      if (warnings.length) {
-        warn.style.display = "block";
-        warn.textContent = warnings.join(" ");
-      } else {
-        warn.style.display = "none";
       }
 
       const setupObj = selectedScope === "regime" ? lens.regime_matched_setups : lens.after_similar_setups;
       const baseObj = selectedScope === "regime" ? lens.regime_baseline_hours : lens.baseline_all_hours;
       const edgeObj = selectedScope === "regime" ? lens.regime_edge_vs_baseline : lens.edge_vs_baseline;
+      const ageHrs = (Date.now() - Date.parse(meta.as_of_utc)) / 3600000;
 
-      const z = cur.z_vector;
-      const activeDims = selectedLensKey === "3D_DEEP_CARRY_VOL"
-        ? FEATURE_META.filter(f => f.in3d)
-        : FEATURE_META;
-      const topDriver = activeDims.reduce((best, item) =>
-        Math.abs(z[item.key]) > Math.abs(z[best.key]) ? item : best
-      , activeDims[0]);
-
-      const s24 = setupObj["24h"];
-      const skewNote = s24.median_up_pct > Math.abs(s24.median_down_pct)
-        ? `Upside skew at +24h: wins (+${s24.median_up_pct.toFixed(2)}%) outweigh losses (${s24.median_down_pct.toFixed(2)}%).`
-        : `Downside skew at +24h: losses (${s24.median_down_pct.toFixed(2)}%) outweigh wins (+${s24.median_up_pct.toFixed(2)}%).`;
-
-      const confNote = q === "thin"
-        ? `Low confidence (${activeN} matches) — rare setup, do not over-size.`
-        : q === "moderate"
-        ? `Moderate confidence (${activeN} matches over ${diag.history_days}d) — use alongside live Pillar 2/3 flow.`
-        : `Solid confidence (${activeN} matches over ${diag.history_days}d) — statistically robust base rate.`;
-
-      document.getElementById("quick-read-list").innerHTML = `
-        <li><strong>Quick Read (${q.toUpperCase()}):</strong> ${confNote}</li>
-        <li><strong>24h Risk/Reward (${selectedScope === "regime" ? "200D Trend-Matched" : "All Regimes"}):</strong> ${skewNote}</li>
-        <li><strong>Top Driver Now:</strong> ${topDriver.label} (${z[topDriver.key] > 0 ? "+" : ""}${z[topDriver.key].toFixed(2)}σ)</li>
-      `;
+      const verdict = buildPlainEnglishVerdict(
+        q, activeN, diag.history_days, setupObj, edgeObj, regCtx, cur.z_vector, cur.raw_metrics, ageHrs
+      );
+      const vCard = document.getElementById("verdict-card");
+      vCard.className = `verdict-card ${verdict.cardClass}`;
+      document.getElementById("verdict-trust").textContent = verdict.trustLabel;
+      document.getElementById("verdict-headline").textContent = verdict.headline;
+      document.getElementById("verdict-next").innerHTML = verdict.nextText;
+      document.getElementById("verdict-now").innerHTML = verdict.nowText;
+      document.getElementById("verdict-risk").innerHTML = verdict.riskAdvice;
 
       const r = cur.raw_metrics;
+      const z = cur.z_vector;
       document.getElementById("state-cards").innerHTML = FEATURE_META.map(f => {
         const zVal = z[f.key];
         const clamped = Math.max(-3, Math.min(3, zVal));
@@ -491,14 +556,16 @@
         const left = clamped >= 0 ? 50 : 50 - pct;
         const color = clamped >= 0 ? "var(--green)" : "var(--red)";
         const isDimmed = selectedLensKey === "3D_DEEP_CARRY_VOL" && !f.in3d;
+        const plainDesc = describeMetricPlain(f.key, zVal, r);
         return `
           <div class="card ${isDimmed ? "dimmed" : ""}">
             <div class="card-top">
               <div class="card-label">${f.label}</div>
-              ${isDimmed ? '<span class="card-tag">3D EXCLUDED</span>' : ""}
+              ${isDimmed ? '<span class="card-tag">Not in 2Y View</span>' : ""}
             </div>
             <div class="card-val">${f.fmt(r)}</div>
-            <div class="card-sub">Z-Score: ${zVal > 0 ? "+" : ""}${zVal.toFixed(2)}σ</div>
+            <div class="card-plain">${plainDesc}</div>
+            <div class="card-sub">7-Day Shift: ${zVal > 0 ? "+" : ""}${zVal.toFixed(2)}σ</div>
             <div class="z-bar-wrap">
               <div class="z-track"><div class="z-fill" style="left:${left}%;width:${pct}%;background:${color};"></div></div>
             </div>
@@ -506,36 +573,35 @@
         `;
       }).join("");
 
-      document.getElementById("horizon-title").textContent =
-        selectedScope === "regime"
-          ? `Forward Return Conditioning (${regCtx.trend_regime.replace(/_/g, " ")}) vs. Regime Baseline`
-          : "Forward Return Conditioning (All Regimes) vs. Unconditional Baseline";
-
-      const horizons = ["4h", "24h", "72h"];
-      document.getElementById("horizon-body").innerHTML = horizons.map(h => {
+      const horizonLabels = {
+        "4h": "+4 Hours Later",
+        "24h": "+1 Day (24h) Later",
+        "72h": "+3 Days (72h) Later"
+      };
+      document.getElementById("horizon-body").innerHTML = ["4h", "24h", "72h"].map(h => {
         const s = setupObj[h];
         const b = baseObj[h];
         const e = edgeObj[h];
         return `
           <tr>
-            <td><strong>+${h}</strong></td>
+            <td><strong>${horizonLabels[h]}</strong></td>
             <td class="${clsVal(e.up_share_lift_pts)}"><strong>${s.up_share.toFixed(1)}%</strong></td>
             <td>${b.up_share.toFixed(1)}%</td>
-            <td class="${clsVal(e.up_share_lift_pts)}">${e.up_share_lift_pts > 0 ? "+" : ""}${e.up_share_lift_pts.toFixed(1)} pts</td>
+            <td class="${clsVal(e.up_share_lift_pts)}">${e.up_share_lift_pts > 0 ? "+" : ""}${e.up_share_lift_pts.toFixed(1)}%</td>
             <td class="${clsVal(s.median_pct)}"><strong>${fmtPct(s.median_pct)}</strong></td>
-            <td class="${clsVal(b.median_pct)}">${fmtPct(b.median_pct)}</td>
-            <td><span class="pos">${fmtPct(s.median_up_pct)}</span> / <span class="neg">${fmtPct(s.median_down_pct)}</span></td>
+            <td><span class="pos">${fmtPct(s.median_up_pct)}</span> vs <span class="neg">${fmtPct(s.median_down_pct)}</span></td>
           </tr>
         `;
       }).join("");
 
-      document.getElementById("analogues-title").textContent =
-        `Closest De-Clustered Historical Analogues — ${selectedLensKey.replace(/_/g, " ")} (Min 24h Spacing)`;
+      const rawAnalogues = lens.top_analogues || [];
+      const analogues = selectedScope === "regime"
+        ? rawAnalogues.filter(a => !a.trend_regime || a.trend_regime === regCtx.trend_regime)
+        : rawAnalogues;
 
-      const analogues = lens.top_analogues || [];
       if (!analogues.length) {
         document.getElementById("analogues-body").innerHTML =
-          `<tr><td colspan="7" style="text-align:center;color:var(--muted);">No historical analogues within distance radius for this lens.</td></tr>`;
+          `<tr><td colspan="7" style="text-align:center;color:var(--muted);">No past dates matched closely enough in this view. Try switching to the 2-Year Carry &amp; Vol view or All Market Trends above.</td></tr>`;
       } else {
         document.getElementById("analogues-body").innerHTML = analogues.map(a => {
           const aReg = a.trend_regime || "ABOVE_200D_SMA";
@@ -544,8 +610,8 @@
             <tr>
               <td>${a.timestamp_utc.replace("T", " ").replace("Z", "")}</td>
               <td>$${Number(a.btc_price).toLocaleString()}</td>
-              <td><span class="regime-pill ${aBull ? "badge-bull" : "badge-bear"}">${aBull ? "ABOVE 200D" : "BELOW 200D"}</span></td>
-              <td>${Number(a.distance).toFixed(3)}</td>
+              <td><span class="regime-pill ${aBull ? "badge-bull" : "badge-bear"}">${aBull ? "Uptrend" : "Downtrend"}</span></td>
+              <td>${Number(a.distance).toFixed(2)}</td>
               <td class="${clsVal(a.ret_4h_pct)}">${fmtPct(a.ret_4h_pct)}</td>
               <td class="${clsVal(a.ret_24h_pct)}">${fmtPct(a.ret_24h_pct)}</td>
               <td class="${clsVal(a.ret_72h_pct)}">${fmtPct(a.ret_72h_pct)}</td>
@@ -568,7 +634,7 @@
         }
         renderView();
       } catch (err) {
-        document.getElementById("meta-line").textContent = "Error loading telemetry JSON: " + err.message;
+        document.getElementById("verdict-headline").textContent = "Unable to load live Bitcoin data: " + err.message;
       }
     }
 
