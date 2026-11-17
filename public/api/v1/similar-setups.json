@@ -5,36 +5,36 @@
     "distance_metric": "regularized_mahalanobis_5d",
     "instrument": "BTC-USDT-SWAP",
     "status": "live",
-    "as_of_utc": "2026-11-17T14:00:00Z",
-    "generated_at_utc": "2026-11-17T14:14:24Z",
+    "as_of_utc": "2026-11-17T13:00:00Z",
+    "generated_at_utc": "2026-11-17T14:15:23Z",
     "history_sources": [
       "OKX Public v5 Keyless Archive"
     ],
     "disclaimer": "Observational historical statistics only. Not a prediction or financial advice."
   },
   "current_state": {
-    "btc_price": 64936.3,
+    "btc_price": 65113.4,
     "raw_metrics": {
       "funding_rate_pct": 0.0014,
-      "basis_bps": -10.88,
-      "oi_delta_24h_pct": 0.0,
-      "gk_vol_24h_ann_pct": 41.63,
-      "taker_buy_ratio": 0.5,
-      "live_l2_imbalance": null
+      "basis_bps": -4.48,
+      "oi_delta_24h_pct": -0.38,
+      "gk_vol_24h_ann_pct": 51.31,
+      "taker_buy_ratio": 0.413,
+      "live_l2_imbalance": -0.9274
     },
     "z_vector": {
-      "funding_rate": -0.597,
-      "basis_bps": -6.765,
-      "oi_delta_24h": 0.9,
-      "gk_vol_24h": -1.159,
-      "taker_buy_ratio": 0.054
+      "funding_rate": -0.606,
+      "basis_bps": 0.216,
+      "oi_delta_24h": 0.805,
+      "gk_vol_24h": -0.448,
+      "taker_buy_ratio": -2.416
     }
   },
   "diagnostics": {
     "analogues_found": 0,
     "target_k": 20,
     "history_days": 720.8,
-    "baseline_hours_evaluated": 17059,
+    "baseline_hours_evaluated": 17058,
     "sample_quality": "thin",
     "avg_vector_distance": 999.0,
     "funding_basis_correlation": 0.106,
@@ -70,7 +70,7 @@
       "up_share": 50.4,
       "median_up_pct": 0.4,
       "median_down_pct": -0.39,
-      "tail_skew_ratio": 1.01
+      "tail_skew_ratio": 1.02
     },
     "24h": {
       "median_pct": 0.02,
