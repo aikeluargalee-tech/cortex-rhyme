@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CORTEX-RHYME | BTC Regime Analogue Engine</title>
+  <title>CORTEX-RHYME | BTC Regime Analogue Engine (MOD 63)</title>
   <style>
     :root {
       --bg: #0b0e14;
       --card: #131822;
+      --card-alt: #171e2b;
       --border: #1f2937;
       --text: #e5e7eb;
       --muted: #9ca3af;
@@ -15,6 +16,7 @@
       --red: #ef4444;
       --amber: #f59e0b;
       --blue: #3b82f6;
+      --purple: #a855f7;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,56 +26,63 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       line-height: 1.5;
       padding: 16px;
-      max-width: 920px;
+      max-width: 960px;
       margin: 0 auto;
     }
     header {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       gap: 12px;
-      padding-bottom: 16px;
+      padding-bottom: 14px;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
-    h1 { font-size: 1.25rem; letter-spacing: 0.04em; font-family: var(--mono); }
-    .subtitle { font-size: 0.82rem; color: var(--muted); }
-    .badge-group { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    h1 { font-size: 1.2rem; letter-spacing: 0.04em; font-family: var(--mono); }
+    .subtitle { font-size: 0.82rem; color: var(--muted); margin-top: 3px; font-family: var(--mono); }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
     .badge {
       font-family: var(--mono);
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 700;
       padding: 4px 10px;
       border-radius: 6px;
       text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
     .badge-solid { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid var(--green); }
     .badge-moderate { background: rgba(59,130,246,0.15); color: var(--blue); border: 1px solid var(--blue); }
     .badge-thin { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid var(--amber); }
-    .badge-bull { background: rgba(16,185,129,0.12); color: var(--green); border: 1px solid rgba(16,185,129,0.45); }
-    .badge-bear { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.45); }
-    .alert {
-      background: rgba(245,158,11,0.12);
-      border: 1px solid var(--amber);
-      color: #fcd34d;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      margin-bottom: 14px;
-      display: none;
-    }
-    .summary-box {
+    .badge-bull { background: rgba(16,185,129,0.12); color: var(--green); border: 1px solid rgba(16,185,129,0.5); }
+    .badge-bear { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.5); }
+
+    .posture-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
       background: var(--card);
       border: 1px solid var(--border);
-      border-left: 3px solid var(--blue);
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 12px 14px;
-      margin-bottom: 14px;
-      font-size: 0.86rem;
+      margin-bottom: 12px;
     }
-    .summary-box ul { list-style: none; display: grid; gap: 4px; }
-    .summary-box li strong { color: var(--text); }
+    .posture-left { display: flex; flex-direction: column; gap: 2px; }
+    .posture-kicker { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-family: var(--mono); }
+    .posture-title { font-family: var(--mono); font-size: 0.98rem; font-weight: 700; }
+    .posture-ev { font-family: var(--mono); font-size: 0.85rem; padding: 5px 10px; border-radius: 6px; background: var(--card-alt); border: 1px solid var(--border); }
+    .posture-pos { border-left: 4px solid var(--green); }
+    .posture-neg { border-left: 4px solid var(--red); }
+    .posture-neu { border-left: 4px solid var(--blue); }
+    .posture-thin { border-left: 4px solid var(--amber); }
+
     .controls-bar {
       display: flex;
       flex-wrap: wrap;
@@ -82,26 +91,71 @@
       gap: 10px;
       margin-bottom: 14px;
     }
-    .pill-group { display: flex; flex-wrap: wrap; gap: 6px; }
-    .pill-btn {
+    .segmented {
+      display: inline-flex;
       background: var(--card);
-      color: var(--muted);
       border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 6px 12px;
+      border-radius: 8px;
+      padding: 3px;
+      gap: 4px;
+    }
+    .seg-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
       font-family: var(--mono);
-      font-size: 0.78rem;
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 6px;
       cursor: pointer;
+      transition: all 0.15s ease;
     }
-    .pill-btn.active {
-      background: rgba(59,130,246,0.18);
+    .seg-btn:hover { color: var(--text); }
+    .seg-btn.active {
+      background: var(--blue);
+      color: #ffffff;
+    }
+    .seg-btn .pill-tag {
+      font-size: 0.66rem;
+      opacity: 0.85;
+      margin-left: 4px;
+    }
+
+    .alert {
+      background: rgba(245,158,11,0.12);
+      border: 1px solid var(--amber);
+      color: #fcd34d;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.83rem;
+      margin-bottom: 12px;
+      display: none;
+    }
+    .info-banner {
+      background: rgba(59,130,246,0.12);
+      border: 1px solid rgba(59,130,246,0.5);
       color: #93c5fd;
-      border-color: var(--blue);
-      font-weight: 700;
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      margin-bottom: 12px;
+      display: none;
     }
+    .quick-read {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      font-size: 0.85rem;
+    }
+    .quick-read ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+    .quick-read li::before { content: "• "; color: var(--blue); font-weight: bold; }
+
     .grid-metrics {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
       gap: 10px;
       margin-bottom: 18px;
     }
@@ -109,12 +163,32 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 14px;
+      padding: 13px;
+      transition: opacity 0.15s ease;
     }
-    .card-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
-    .card-val { font-family: var(--mono); font-size: 1.15rem; font-weight: 700; margin-top: 4px; }
-    .card-sub { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
-    h2 { font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 18px 0 10px; }
+    .card.dimmed {
+      opacity: 0.48;
+      border-style: dashed;
+    }
+    .card-top { display: flex; justify-content: space-between; align-items: center; gap: 4px; }
+    .card-label { font-size: 0.73rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .card-tag { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); background: var(--card-alt); padding: 1px 5px; border-radius: 4px; }
+    .card-val { font-family: var(--mono); font-size: 1.12rem; font-weight: 700; margin-top: 4px; }
+    .card-sub { font-family: var(--mono); font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
+    .z-bar-wrap { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+    .z-track { flex: 1; height: 6px; background: #1f2937; border-radius: 4px; position: relative; overflow: hidden; }
+    .z-fill { height: 100%; position: absolute; top: 0; }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin: 18px 0 10px;
+    }
+    h2 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+    .table-wrap { overflow-x: auto; }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -122,21 +196,25 @@
       border-radius: 10px;
       overflow: hidden;
       border: 1px solid var(--border);
-      font-size: 0.88rem;
+      font-size: 0.85rem;
     }
     th, td {
-      padding: 10px 12px;
+      padding: 9px 11px;
       text-align: right;
       border-bottom: 1px solid var(--border);
       font-family: var(--mono);
+      white-space: nowrap;
     }
     th:first-child, td:first-child { text-align: left; }
-    th { background: #171e2b; color: var(--muted); font-size: 0.75rem; text-transform: uppercase; }
+    th { background: var(--card-alt); color: var(--muted); font-size: 0.72rem; text-transform: uppercase; }
     .pos { color: var(--green); }
     .neg { color: var(--red); }
-    .z-bar-wrap { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
-    .z-track { flex: 1; height: 6px; background: #1f2937; border-radius: 4px; position: relative; overflow: hidden; }
-    .z-fill { height: 100%; position: absolute; top: 0; }
+    .regime-pill {
+      font-size: 0.68rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
     footer {
       margin-top: 24px;
       padding-top: 14px;
@@ -157,24 +235,47 @@
       <h1>CORTEX-RHYME // BTC STATE ANALOGUES</h1>
       <div class="subtitle" id="meta-line">Loading empirical telemetry...</div>
     </div>
-    <div class="badge-group">
-      <div id="regime-badge" class="badge badge-thin" style="display:none;"></div>
+    <div class="badge-row">
+      <div id="trend-badge" class="badge badge-bull">200D SMA: --</div>
       <div id="quality-badge" class="badge badge-thin">LOADING</div>
     </div>
   </header>
 
-  <div id="warning-banner" class="alert"></div>
-  <div id="summary-box" class="summary-box" style="display:none;"></div>
+  <div id="posture-bar" class="posture-bar posture-neu">
+    <div class="posture-left">
+      <span class="posture-kicker" id="posture-kicker">24H CONDITIONAL EXPECTANCY POSTURE (MOD 63)</span>
+      <span class="posture-title" id="posture-title">Evaluating state-space distribution...</span>
+    </div>
+    <div class="posture-ev" id="posture-ev">24h EV: --</div>
+  </div>
 
-  <div class="controls-bar" id="controls-bar" style="display:none;">
-    <div class="pill-group" id="lens-pills"></div>
-    <div class="pill-group" id="regime-pills"></div>
+  <div class="controls-bar">
+    <div class="segmented" role="group" aria-label="State-Space Lens Selector">
+      <button id="btn-lens-5d" class="seg-btn" type="button">5D Microstructure <span class="pill-tag" id="tag-5d">--</span></button>
+      <button id="btn-lens-3d" class="seg-btn" type="button">3D Deep Carry-Vol <span class="pill-tag" id="tag-3d">--</span></button>
+    </div>
+
+    <div class="segmented" role="group" aria-label="Trend Conditioning Scope">
+      <button id="btn-scope-all" class="seg-btn active" type="button">All Regimes</button>
+      <button id="btn-scope-regime" class="seg-btn" type="button">200D Trend-Matched</button>
+    </div>
+  </div>
+
+  <div id="fallback-banner" class="info-banner"></div>
+  <div id="warning-banner" class="alert"></div>
+
+  <div class="quick-read" id="quick-read-box">
+    <ul id="quick-read-list">
+      <li>Initializing state-space summary...</li>
+    </ul>
   </div>
 
   <div class="grid-metrics" id="state-cards"></div>
 
-  <h2 id="horizon-title">Forward Return Conditioning vs. Unconditional Baseline</h2>
-  <div style="overflow-x:auto;">
+  <div class="section-header">
+    <h2 id="horizon-title">Forward Return Conditioning vs. Unconditional Baseline</h2>
+  </div>
+  <div class="table-wrap">
     <table>
       <thead>
         <tr>
@@ -191,14 +292,17 @@
     </table>
   </div>
 
-  <h2>Closest De-Clustered Historical Analogues (Min 24h Spacing)</h2>
-  <div style="overflow-x:auto;">
+  <div class="section-header">
+    <h2 id="analogues-title">Closest De-Clustered Historical Analogues (Min 24h Spacing)</h2>
+  </div>
+  <div class="table-wrap">
     <table>
       <thead>
         <tr>
           <th>Timestamp (UTC)</th>
           <th>BTC Price</th>
-          <th title="Mahalanobis distance from current state (lower = closer match)">Vector Dist</th>
+          <th>200D Trend</th>
+          <th title="Mahalanobis distance from current state (lower = closer match)">Mahalanobis Dist</th>
           <th>+4h</th>
           <th>+24h</th>
           <th>+72h</th>
@@ -216,63 +320,133 @@
   <script>
     const fmtPct = (v, sign = true) => `${sign && v > 0 ? "+" : ""}${Number(v).toFixed(2)}%`;
     const clsVal = (v) => (v > 0 ? "pos" : v < 0 ? "neg" : "");
+
     const POSTURE_LABELS = {
-      POSITIVE_SKEW_LOOP_A: "POSITIVE SKEW (LOOP A FAVORED)",
-      NEGATIVE_SKEW_LOOP_B: "NEGATIVE SKEW (LOOP B / TRIM FAVORED)",
-      NEUTRAL_CHOP: "NEUTRAL CHOP (NO EDGE LIFT)",
-      OUTLIER_THIN_ZERO_WEIGHT: "OUTLIER / THIN (ZERO WEIGHT)",
+      POSITIVE_SKEW_LOOP_A: {
+        text: "POSITIVE SKEW — DIBSE Loop A (USDT → BTC) Favored",
+        css: "posture-pos"
+      },
+      NEGATIVE_SKEW_LOOP_B: {
+        text: "NEGATIVE SKEW — DIBSE Loop B (BTC → USDT) / Trim Favored",
+        css: "posture-neg"
+      },
+      NEUTRAL_CHOP: {
+        text: "NEUTRAL CHOP — No Statistically Significant Baseline Lift",
+        css: "posture-neu"
+      },
+      OUTLIER_THIN_ZERO_WEIGHT: {
+        text: "OUTLIER / THIN SAMPLE — Assign 0.0x Analogue Sizing Weight",
+        css: "posture-thin"
+      }
     };
 
-    let payload = null;
-    let selectedLensKey = null;
-    let selectedRegimeMode = "all";
-    let liveTickerPx = null;
+    const FEATURE_META = [
+      { key: "funding_rate", label: "Funding (8h)", fmt: (r) => `${r.funding_rate_pct}%`, in3d: true },
+      { key: "basis_bps", label: "Perp Basis", fmt: (r) => `${r.basis_bps} bps`, in3d: true },
+      { key: "oi_delta_24h", label: "OI Delta (24h)", fmt: (r) => fmtPct(r.oi_delta_24h_pct), in3d: false },
+      { key: "gk_vol_24h", label: "GK Vol (24h Ann)", fmt: (r) => `${r.gk_vol_24h_ann_pct}%`, in3d: true },
+      { key: "taker_buy_ratio", label: "Taker Buy Ratio", fmt: (r) => Number(r.taker_buy_ratio).toFixed(3), in3d: false }
+    ];
 
-    function renderView() {
-      if (!payload) return;
-      const d = payload;
-      const meta = d.meta;
-      const cur = d.current_state;
-      const lenses = d.lenses || {};
-      const activeLens = lenses[selectedLensKey] || {
-        lens_id: meta.active_lens || "5D_MICROSTRUCTURE",
+    let payload = null;
+    let liveTickerPrice = null;
+    let selectedLensKey = "5D_MICROSTRUCTURE";
+    let selectedScope = "all";
+
+    async function fetchLivePrice() {
+      try {
+        const res = await fetch("https://www.okx.com/api/v5/market/ticker?instId=BTC-USDT-SWAP");
+        if (!res.ok) return;
+        const j = await res.json();
+        if (j && j.data && j.data[0] && j.data[0].last) {
+          liveTickerPrice = parseFloat(j.data[0].last);
+        }
+      } catch (_) {}
+    }
+
+    function normalizeLenses(d) {
+      if (d.lenses && d.lenses["5D_MICROSTRUCTURE"] && d.lenses["3D_DEEP_CARRY_VOL"]) {
+        return d.lenses;
+      }
+      const fallbackLens = {
+        lens_id: "5D_MICROSTRUCTURE",
+        dimensions: ["funding_rate", "basis_bps", "oi_delta_24h", "gk_vol_24h", "taker_buy_ratio"],
         diagnostics: d.diagnostics,
         after_similar_setups: d.after_similar_setups,
         baseline_all_hours: d.baseline_all_hours,
         edge_vs_baseline: d.edge_vs_baseline,
-        regime_matched_setups: d.regime_matched_setups,
-        regime_baseline_hours: d.regime_baseline_hours,
-        regime_edge_vs_baseline: d.regime_edge_vs_baseline,
-        top_analogues: d.top_analogues,
+        regime_matched_setups: d.after_similar_setups,
+        regime_baseline_hours: d.baseline_all_hours,
+        regime_edge_vs_baseline: d.edge_vs_baseline,
+        top_analogues: d.top_analogues || []
       };
-      const diag = activeLens.diagnostics;
+      return {
+        "5D_MICROSTRUCTURE": fallbackLens,
+        "3D_DEEP_CARRY_VOL": fallbackLens
+      };
+    }
 
+    function renderView() {
+      if (!payload) return;
+      const d = payload;
+      const lenses = normalizeLenses(d);
+      const lens = lenses[selectedLensKey] || lenses["5D_MICROSTRUCTURE"];
+      const diag = lens.diagnostics;
+      const meta = d.meta;
+      const cur = d.current_state;
+
+      document.getElementById("btn-lens-5d").classList.toggle("active", selectedLensKey === "5D_MICROSTRUCTURE");
+      document.getElementById("btn-lens-3d").classList.toggle("active", selectedLensKey === "3D_DEEP_CARRY_VOL");
+      document.getElementById("btn-scope-all").classList.toggle("active", selectedScope === "all");
+      document.getElementById("btn-scope-regime").classList.toggle("active", selectedScope === "regime");
+
+      const d5 = lenses["5D_MICROSTRUCTURE"].diagnostics;
+      const d3 = lenses["3D_DEEP_CARRY_VOL"].diagnostics;
+      document.getElementById("tag-5d").textContent = `${d5.sample_quality.toUpperCase()} · ${d5.history_days}d`;
+      document.getElementById("tag-3d").textContent = `${d3.sample_quality.toUpperCase()} · ${d3.history_days}d`;
+
+      const closeLabel = meta.as_of_utc.replace("T", " ").replace(":00Z", " UTC");
+      const livePrefix = liveTickerPrice ? `Live: $${liveTickerPrice.toLocaleString()} · ` : "";
+      const activeN = selectedScope === "regime" ? (diag.regime_analogues_found ?? diag.analogues_found) : diag.analogues_found;
+      const activeDist = selectedScope === "regime" ? (diag.regime_avg_distance ?? diag.avg_vector_distance) : diag.avg_vector_distance;
       document.getElementById("meta-line").textContent =
-        `${liveTickerPx ? `Live: $${liveTickerPx.toLocaleString()} · ` : ""}1H Close (${meta.as_of_utc.slice(0, 16).replace("T", " ")} UTC): $${cur.btc_price.toLocaleString()} · Lens: ${activeLens.lens_id === "3D_DEEP_CARRY_VOL" ? "3D Carry-Vol" : "5D Micro"} (${diag.history_days}d) · Analogues: ${diag.analogues_found}/${diag.target_k} (Avg Dist: ${diag.avg_vector_distance} · FB Corr: ${diag.funding_basis_correlation})`;
+        `${livePrefix}1H Close (${closeLabel}): $${cur.btc_price.toLocaleString()} · History: ${diag.history_days}d · Analogues: ${activeN}/${diag.target_k} (Avg Dist: ${activeDist} · FB Corr: ${diag.funding_basis_correlation})`;
 
-      const q = (selectedRegimeMode === "regime" ? (diag.regime_sample_quality || diag.sample_quality) : diag.sample_quality).toLowerCase();
-      const nShown = selectedRegimeMode === "regime" ? (diag.regime_analogues_found ?? diag.analogues_found) : diag.analogues_found;
-      const badge = document.getElementById("quality-badge");
-      badge.textContent = `SAMPLE: ${q.toUpperCase()} (n=${nShown})`;
-      badge.className = `badge badge-${q}`;
+      const regCtx = cur.regime_context || { trend_regime: "ABOVE_200D_SMA", sma_200d: 0, distance_from_sma_200d_pct: 0 };
+      const isBull = regCtx.trend_regime === "ABOVE_200D_SMA";
+      const trendBadge = document.getElementById("trend-badge");
+      trendBadge.className = `badge ${isBull ? "badge-bull" : "badge-bear"}`;
+      trendBadge.textContent = `${isBull ? "ABOVE" : "BELOW"} 200D SMA (${fmtPct(regCtx.distance_from_sma_200d_pct)})`;
 
-      if (cur.regime_context) {
-        const rb = document.getElementById("regime-badge");
-        const isBull = cur.regime_context.trend_regime === "ABOVE_200D_SMA";
-        rb.style.display = "inline-block";
-        rb.className = `badge ${isBull ? "badge-bull" : "badge-bear"}`;
-        rb.textContent = `${isBull ? "ABOVE" : "BELOW"} 200D SMA (${cur.regime_context.distance_from_sma_200d_pct > 0 ? "+" : ""}${cur.regime_context.distance_from_sma_200d_pct}%)`;
+      const rawQ = selectedScope === "regime" ? (diag.regime_sample_quality || diag.sample_quality) : diag.sample_quality;
+      const q = rawQ.toLowerCase();
+      const qBadge = document.getElementById("quality-badge");
+      qBadge.textContent = `SAMPLE: ${q.toUpperCase()} (n=${activeN})`;
+      qBadge.className = `badge badge-${q}`;
+
+      const postureKey = q === "thin" ? "OUTLIER_THIN_ZERO_WEIGHT" : (diag.posture_verdict || "NEUTRAL_CHOP");
+      const pInfo = POSTURE_LABELS[postureKey] || POSTURE_LABELS.NEUTRAL_CHOP;
+      const postureBar = document.getElementById("posture-bar");
+      postureBar.className = `posture-bar ${pInfo.css}`;
+      document.getElementById("posture-kicker").textContent =
+        `24H CONDITIONAL EXPECTANCY POSTURE · LENS: ${selectedLensKey.replace(/_/g, " ")} · 200D SMA: $${Number(regCtx.sma_200d).toLocaleString()}`;
+      document.getElementById("posture-title").textContent = pInfo.text;
+      const evVal = diag.conditional_ev_24h_pct ?? 0.0;
+      document.getElementById("posture-ev").innerHTML = `24h Cond. EV: <strong class="${clsVal(evVal)}">${fmtPct(evVal)}</strong>`;
+
+      const fbBanner = document.getElementById("fallback-banner");
+      if (d.diagnostics && d.diagnostics.fallback_triggered && d.diagnostics.fallback_reason) {
+        fbBanner.style.display = "block";
+        fbBanner.textContent = `Auto-Arbitration Active: ${d.diagnostics.fallback_reason}`;
+      } else {
+        fbBanner.style.display = "none";
       }
 
       const ageHrs = (Date.now() - Date.parse(meta.as_of_utc)) / 3600000;
       const warn = document.getElementById("warning-banner");
       const warnings = [];
-      if (ageHrs > 2.5) warnings.push(`Stale feed alert: Last snapshot is ${ageHrs.toFixed(1)} hours old.`);
-      if (d.diagnostics.fallback_triggered && selectedLensKey === "3D_DEEP_CARRY_VOL") {
-        warnings.push(`Auto-Fallback Active: ${d.diagnostics.fallback_reason}`);
-      } else if (q === "thin") {
-        warnings.push("Thin sample grade: Fewer than 10 de-clustered analogues match current conditions. Treat as indicative only.");
-      }
+      if (ageHrs > 2.5) warnings.push(`Stale feed alert: Last snapshot is ${ageHrs.toFixed(1)} hours old (exceeds MOD 36 2.5h SLA).`);
+      if (q === "thin") warnings.push("Thin sample grade: Fewer than 10 de-clustered analogues match current conditions. Treat as indicative only (0.0x sizing modifier).");
       if (warnings.length) {
         warn.style.display = "block";
         warn.textContent = warnings.join(" ");
@@ -280,66 +454,51 @@
         warn.style.display = "none";
       }
 
-      const r = cur.raw_metrics;
+      const setupObj = selectedScope === "regime" ? lens.regime_matched_setups : lens.after_similar_setups;
+      const baseObj = selectedScope === "regime" ? lens.regime_baseline_hours : lens.baseline_all_hours;
+      const edgeObj = selectedScope === "regime" ? lens.regime_edge_vs_baseline : lens.edge_vs_baseline;
+
       const z = cur.z_vector;
-      const features = [
-        { label: "Funding (8h)", raw: `${r.funding_rate_pct}%`, z: z.funding_rate },
-        { label: "Perp Basis", raw: `${r.basis_bps} bps`, z: z.basis_bps },
-        { label: "OI Delta (24h)", raw: fmtPct(r.oi_delta_24h_pct), z: z.oi_delta_24h },
-        { label: "GK Vol (24h Ann)", raw: `${r.gk_vol_24h_ann_pct}%`, z: z.gk_vol_24h },
-        { label: "Taker Buy Ratio", raw: r.taker_buy_ratio.toFixed(3), z: z.taker_buy_ratio },
-      ];
+      const activeDims = selectedLensKey === "3D_DEEP_CARRY_VOL"
+        ? FEATURE_META.filter(f => f.in3d)
+        : FEATURE_META;
+      const topDriver = activeDims.reduce((best, item) =>
+        Math.abs(z[item.key]) > Math.abs(z[best.key]) ? item : best
+      , activeDims[0]);
 
-      const topDriver = [...features].sort((a, b) => Math.abs(b.z) - Math.abs(a.z))[0];
-      const setups = (selectedRegimeMode === "regime" && activeLens.regime_matched_setups) ? activeLens.regime_matched_setups : activeLens.after_similar_setups;
-      const baseline = (selectedRegimeMode === "regime" && activeLens.regime_baseline_hours) ? activeLens.regime_baseline_hours : activeLens.baseline_all_hours;
-      const edge = (selectedRegimeMode === "regime" && activeLens.regime_edge_vs_baseline) ? activeLens.regime_edge_vs_baseline : activeLens.edge_vs_baseline;
+      const s24 = setupObj["24h"];
+      const skewNote = s24.median_up_pct > Math.abs(s24.median_down_pct)
+        ? `Upside skew at +24h: wins (+${s24.median_up_pct.toFixed(2)}%) outweigh losses (${s24.median_down_pct.toFixed(2)}%).`
+        : `Downside skew at +24h: losses (${s24.median_down_pct.toFixed(2)}%) outweigh wins (+${s24.median_up_pct.toFixed(2)}%).`;
 
-      const s24 = setups["24h"];
-      const e24 = edge["24h"];
-      const postureLabel = POSTURE_LABELS[diag.posture_verdict] || diag.posture_verdict || q.toUpperCase();
-      const skewDesc = nShown === 0
-        ? "No historical analogues within distance threshold."
-        : s24.tail_skew_ratio > 0 && s24.tail_skew_ratio < 0.75
-          ? `Downside skew at +24h: losses (${fmtPct(s24.median_down_pct)}) outweigh wins (${fmtPct(s24.median_up_pct)}).`
-          : s24.tail_skew_ratio > 1.35
-            ? `Upside skew at +24h: wins (${fmtPct(s24.median_up_pct)}) outweigh losses (${fmtPct(s24.median_down_pct)}).`
-            : `Balanced +24h payoff (${fmtPct(s24.median_up_pct)} up / ${fmtPct(s24.median_down_pct)} down), ${e24.up_share_lift_pts > 0 ? "+" : ""}${e24.up_share_lift_pts.toFixed(1)} pts vs. baseline.`;
+      const confNote = q === "thin"
+        ? `Low confidence (${activeN} matches) — rare setup, do not over-size.`
+        : q === "moderate"
+        ? `Moderate confidence (${activeN} matches over ${diag.history_days}d) — use alongside live Pillar 2/3 flow.`
+        : `Solid confidence (${activeN} matches over ${diag.history_days}d) — statistically robust base rate.`;
 
-      const sumBox = document.getElementById("summary-box");
-      sumBox.style.display = "block";
-      sumBox.innerHTML = `
-        <ul>
-          <li><strong>Posture (${activeLens.lens_id === "3D_DEEP_CARRY_VOL" ? "3D" : "5D"}):</strong> ${postureLabel}${diag.conditional_ev_24h_pct !== undefined ? ` · 24h EV: ${fmtPct(diag.conditional_ev_24h_pct)}` : ""}</li>
-          <li><strong>24h Risk/Reward:</strong> ${skewDesc}</li>
-          <li><strong>Top Driver Now:</strong> ${topDriver.label} (${topDriver.z > 0 ? "+" : ""}${topDriver.z.toFixed(2)}σ)</li>
-        </ul>
+      document.getElementById("quick-read-list").innerHTML = `
+        <li><strong>Quick Read (${q.toUpperCase()}):</strong> ${confNote}</li>
+        <li><strong>24h Risk/Reward (${selectedScope === "regime" ? "200D Trend-Matched" : "All Regimes"}):</strong> ${skewNote}</li>
+        <li><strong>Top Driver Now:</strong> ${topDriver.label} (${z[topDriver.key] > 0 ? "+" : ""}${z[topDriver.key].toFixed(2)}σ)</li>
       `;
 
-      if (d.lenses) {
-        document.getElementById("controls-bar").style.display = "flex";
-        const l5 = d.lenses["5D_MICROSTRUCTURE"];
-        const l3 = d.lenses["3D_DEEP_CARRY_VOL"];
-        document.getElementById("lens-pills").innerHTML = `
-          <button class="pill-btn ${selectedLensKey === "5D_MICROSTRUCTURE" ? "active" : ""}" onclick="setLens('5D_MICROSTRUCTURE')">5D (${l5.diagnostics.history_days}d · n=${l5.diagnostics.analogues_found})</button>
-          <button class="pill-btn ${selectedLensKey === "3D_DEEP_CARRY_VOL" ? "active" : ""}" onclick="setLens('3D_DEEP_CARRY_VOL')">3D Carry-Vol (${l3.diagnostics.history_days}d · n=${l3.diagnostics.analogues_found})</button>
-        `;
-        document.getElementById("regime-pills").innerHTML = `
-          <button class="pill-btn ${selectedRegimeMode === "all" ? "active" : ""}" onclick="setRegimeMode('all')">All Regimes (n=${diag.analogues_found})</button>
-          <button class="pill-btn ${selectedRegimeMode === "regime" ? "active" : ""}" onclick="setRegimeMode('regime')">Same 200D SMA (n=${diag.regime_analogues_found ?? 0})</button>
-        `;
-      }
-
-      document.getElementById("state-cards").innerHTML = features.map(f => {
-        const clamped = Math.max(-3, Math.min(3, f.z));
+      const r = cur.raw_metrics;
+      document.getElementById("state-cards").innerHTML = FEATURE_META.map(f => {
+        const zVal = z[f.key];
+        const clamped = Math.max(-3, Math.min(3, zVal));
         const pct = (Math.abs(clamped) / 3) * 50;
         const left = clamped >= 0 ? 50 : 50 - pct;
         const color = clamped >= 0 ? "var(--green)" : "var(--red)";
+        const isDimmed = selectedLensKey === "3D_DEEP_CARRY_VOL" && !f.in3d;
         return `
-          <div class="card">
-            <div class="card-label">${f.label}</div>
-            <div class="card-val">${f.raw}</div>
-            <div class="card-sub">Z-Score: ${f.z > 0 ? "+" : ""}${f.z.toFixed(2)}σ</div>
+          <div class="card ${isDimmed ? "dimmed" : ""}">
+            <div class="card-top">
+              <div class="card-label">${f.label}</div>
+              ${isDimmed ? '<span class="card-tag">3D EXCLUDED</span>' : ""}
+            </div>
+            <div class="card-val">${f.fmt(r)}</div>
+            <div class="card-sub">Z-Score: ${zVal > 0 ? "+" : ""}${zVal.toFixed(2)}σ</div>
             <div class="z-bar-wrap">
               <div class="z-track"><div class="z-fill" style="left:${left}%;width:${pct}%;background:${color};"></div></div>
             </div>
@@ -348,13 +507,15 @@
       }).join("");
 
       document.getElementById("horizon-title").textContent =
-        `Forward Return Conditioning (${selectedRegimeMode === "regime" ? "Same 200D SMA Regime" : "All Regimes"}) vs. Baseline`;
+        selectedScope === "regime"
+          ? `Forward Return Conditioning (${regCtx.trend_regime.replace(/_/g, " ")}) vs. Regime Baseline`
+          : "Forward Return Conditioning (All Regimes) vs. Unconditional Baseline";
 
       const horizons = ["4h", "24h", "72h"];
       document.getElementById("horizon-body").innerHTML = horizons.map(h => {
-        const s = setups[h];
-        const b = baseline[h];
-        const e = edge[h];
+        const s = setupObj[h];
+        const b = baseObj[h];
+        const e = edgeObj[h];
         return `
           <tr>
             <td><strong>+${h}</strong></td>
@@ -368,49 +529,72 @@
         `;
       }).join("");
 
-      const filteredAnalogues = selectedRegimeMode === "regime" && cur.regime_context
-        ? activeLens.top_analogues.filter(a => !a.trend_regime || a.trend_regime === cur.regime_context.trend_regime)
-        : activeLens.top_analogues;
+      document.getElementById("analogues-title").textContent =
+        `Closest De-Clustered Historical Analogues — ${selectedLensKey.replace(/_/g, " ")} (Min 24h Spacing)`;
 
-      document.getElementById("analogues-body").innerHTML = filteredAnalogues.map(a => `
-        <tr>
-          <td>${a.timestamp_utc.replace("T", " ").replace("Z", "")}</td>
-          <td>$${a.btc_price.toLocaleString()}</td>
-          <td>${a.distance.toFixed(3)}</td>
-          <td class="${clsVal(a.ret_4h_pct)}">${fmtPct(a.ret_4h_pct)}</td>
-          <td class="${clsVal(a.ret_24h_pct)}">${fmtPct(a.ret_24h_pct)}</td>
-          <td class="${clsVal(a.ret_72h_pct)}">${fmtPct(a.ret_72h_pct)}</td>
-        </tr>
-      `).join("");
+      const analogues = lens.top_analogues || [];
+      if (!analogues.length) {
+        document.getElementById("analogues-body").innerHTML =
+          `<tr><td colspan="7" style="text-align:center;color:var(--muted);">No historical analogues within distance radius for this lens.</td></tr>`;
+      } else {
+        document.getElementById("analogues-body").innerHTML = analogues.map(a => {
+          const aReg = a.trend_regime || "ABOVE_200D_SMA";
+          const aBull = aReg === "ABOVE_200D_SMA";
+          return `
+            <tr>
+              <td>${a.timestamp_utc.replace("T", " ").replace("Z", "")}</td>
+              <td>$${Number(a.btc_price).toLocaleString()}</td>
+              <td><span class="regime-pill ${aBull ? "badge-bull" : "badge-bear"}">${aBull ? "ABOVE 200D" : "BELOW 200D"}</span></td>
+              <td>${Number(a.distance).toFixed(3)}</td>
+              <td class="${clsVal(a.ret_4h_pct)}">${fmtPct(a.ret_4h_pct)}</td>
+              <td class="${clsVal(a.ret_24h_pct)}">${fmtPct(a.ret_24h_pct)}</td>
+              <td class="${clsVal(a.ret_72h_pct)}">${fmtPct(a.ret_72h_pct)}</td>
+            </tr>
+          `;
+        }).join("");
+      }
     }
 
-    window.setLens = (k) => { selectedLensKey = k; renderView(); };
-    window.setRegimeMode = (m) => { selectedRegimeMode = m; renderView(); };
-
-    async function loadDashboard() {
+    async function refreshData() {
       try {
-        const res = await fetch("./api/v1/similar-setups.json?t=" + Date.now());
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        payload = await res.json();
-        if (!selectedLensKey) {
-          selectedLensKey = payload.meta.active_lens || "5D_MICROSTRUCTURE";
+        const [jsonRes] = await Promise.all([
+          fetch("./api/v1/similar-setups.json?t=" + Date.now()),
+          fetchLivePrice()
+        ]);
+        if (!jsonRes.ok) throw new Error(`HTTP ${jsonRes.status}`);
+        payload = await jsonRes.json();
+        if (!selectedLensKey || !payload.lenses?.[selectedLensKey]) {
+          selectedLensKey = (payload.meta && payload.meta.active_lens) || "5D_MICROSTRUCTURE";
         }
         renderView();
-
-        fetch("https://www.okx.com/api/v5/market/ticker?instId=BTC-USDT-SWAP")
-          .then(r => r.ok ? r.json() : null)
-          .then(t => {
-            const px = t && t.data && t.data[0] && Number(t.data[0].last);
-            if (px) { liveTickerPx = px; renderView(); }
-          })
-          .catch(() => {});
       } catch (err) {
         document.getElementById("meta-line").textContent = "Error loading telemetry JSON: " + err.message;
       }
     }
 
-    loadDashboard();
-    setInterval(loadDashboard, 300000);
+    function initDashboard() {
+      document.getElementById("btn-lens-5d").addEventListener("click", () => {
+        selectedLensKey = "5D_MICROSTRUCTURE";
+        renderView();
+      });
+      document.getElementById("btn-lens-3d").addEventListener("click", () => {
+        selectedLensKey = "3D_DEEP_CARRY_VOL";
+        renderView();
+      });
+      document.getElementById("btn-scope-all").addEventListener("click", () => {
+        selectedScope = "all";
+        renderView();
+      });
+      document.getElementById("btn-scope-regime").addEventListener("click", () => {
+        selectedScope = "regime";
+        renderView();
+      });
+
+      refreshData();
+      setInterval(refreshData, 300000);
+    }
+
+    initDashboard();
   </script>
 </body>
 </html>
