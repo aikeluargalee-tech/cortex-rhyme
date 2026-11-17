@@ -98,7 +98,8 @@ def compute_regularized_precision_matrix(
     fb_corr = cov[0][1] / (std_f * std_b)
 
     for d in range(dim):
-        cov[d][d] += ridge
+        # Prevent zero-padded historical backfill columns from collapsing variance and hyper-amplifying inv_cov
+        cov[d][d] = max(cov[d][d], 1.0) + ridge
 
     inv_cov = invert_matrix_gauss_jordan(cov)
     return {

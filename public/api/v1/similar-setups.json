@@ -6,7 +6,7 @@
     "instrument": "BTC-USDT-SWAP",
     "status": "live",
     "as_of_utc": "2026-11-17T13:00:00Z",
-    "generated_at_utc": "2026-11-17T14:15:23Z",
+    "generated_at_utc": "2026-11-17T14:17:41Z",
     "history_sources": [
       "OKX Public v5 Keyless Archive"
     ],
@@ -20,7 +20,7 @@
       "oi_delta_24h_pct": -0.38,
       "gk_vol_24h_ann_pct": 51.31,
       "taker_buy_ratio": 0.413,
-      "live_l2_imbalance": -0.9274
+      "live_l2_imbalance": -0.0971
     },
     "z_vector": {
       "funding_rate": -0.606,
@@ -31,37 +31,37 @@
     }
   },
   "diagnostics": {
-    "analogues_found": 0,
+    "analogues_found": 4,
     "target_k": 20,
     "history_days": 720.8,
     "baseline_hours_evaluated": 17058,
     "sample_quality": "thin",
-    "avg_vector_distance": 999.0,
+    "avg_vector_distance": 2.638,
     "funding_basis_correlation": 0.106,
     "embargo_hours": 72,
     "declustering_hours": 24
   },
   "after_similar_setups": {
     "4h": {
-      "median_pct": 0.0,
-      "up_share": 0.0,
-      "median_up_pct": 0.0,
-      "median_down_pct": 0.0,
-      "tail_skew_ratio": 0.0
+      "median_pct": 0.17,
+      "up_share": 75.0,
+      "median_up_pct": 0.19,
+      "median_down_pct": -0.07,
+      "tail_skew_ratio": 2.66
     },
     "24h": {
-      "median_pct": 0.0,
-      "up_share": 0.0,
-      "median_up_pct": 0.0,
-      "median_down_pct": 0.0,
-      "tail_skew_ratio": 0.0
+      "median_pct": -0.78,
+      "up_share": 50.0,
+      "median_up_pct": 0.69,
+      "median_down_pct": -2.3,
+      "tail_skew_ratio": 0.3
     },
     "72h": {
-      "median_pct": 0.0,
-      "up_share": 0.0,
-      "median_up_pct": 0.0,
-      "median_down_pct": 0.0,
-      "tail_skew_ratio": 0.0
+      "median_pct": -0.77,
+      "up_share": 50.0,
+      "median_up_pct": 1.24,
+      "median_down_pct": -3.31,
+      "tail_skew_ratio": 0.38
     }
   },
   "baseline_all_hours": {
@@ -89,17 +89,50 @@
   },
   "edge_vs_baseline": {
     "4h": {
-      "up_share_lift_pts": -50.4,
-      "median_lift_pct": 0.0
+      "up_share_lift_pts": 24.6,
+      "median_lift_pct": 0.17
     },
     "24h": {
-      "up_share_lift_pts": -50.6,
-      "median_lift_pct": -0.02
+      "up_share_lift_pts": -0.6,
+      "median_lift_pct": -0.8
     },
     "72h": {
-      "up_share_lift_pts": -49.7,
-      "median_lift_pct": 0.03
+      "up_share_lift_pts": 0.3,
+      "median_lift_pct": -0.74
     }
   },
-  "top_analogues": []
+  "top_analogues": [
+    {
+      "timestamp_utc": "2026-09-22T21:00:00Z",
+      "btc_price": 86154.3,
+      "distance": 2.634,
+      "ret_4h_pct": 0.19,
+      "ret_24h_pct": -2.06,
+      "ret_72h_pct": -2.78
+    },
+    {
+      "timestamp_utc": "2026-10-10T06:00:00Z",
+      "btc_price": 82706.2,
+      "distance": 2.634,
+      "ret_4h_pct": 0.14,
+      "ret_24h_pct": 0.5,
+      "ret_72h_pct": 1.24
+    },
+    {
+      "timestamp_utc": "2026-10-06T19:00:00Z",
+      "btc_price": 85573.3,
+      "distance": 2.637,
+      "ret_4h_pct": -0.07,
+      "ret_24h_pct": -2.53,
+      "ret_72h_pct": -3.83
+    },
+    {
+      "timestamp_utc": "2026-09-28T14:00:00Z",
+      "btc_price": 82987.9,
+      "distance": 2.647,
+      "ret_4h_pct": 1.21,
+      "ret_24h_pct": 0.88,
+      "ret_72h_pct": 1.24
+    }
+  ]
 }

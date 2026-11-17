@@ -223,7 +223,7 @@ def run_sync(target_bars: int = 1440) -> None:
     conn = init_db(DB_PATH)
     cur = conn.cursor()
 
-    cur.execute("SELECT COUNT(*) FROM hourly_state")
+    cur.execute("SELECT COUNT(*) FROM hourly_state WHERE oi_usd IS NOT NULL")
     existing_count = cur.fetchone()[0]
     fetch_bars = 72 if existing_count >= 1200 else target_bars
     print(f"[INFO] Existing DB rows: {existing_count} | Fetching {fetch_bars} hourly bars from OKX...")
