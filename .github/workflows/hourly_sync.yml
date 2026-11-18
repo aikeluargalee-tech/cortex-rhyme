@@ -3,6 +3,7 @@ name: CORTEX-RHYME Hourly Sync
 on:
   schedule:
     - cron: "5 * * * *"
+    - cron: "35 * * * *"
   workflow_dispatch:
 
 permissions:
