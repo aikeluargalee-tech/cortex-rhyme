@@ -7,7 +7,7 @@
     "instrument": "BTC-USDT-SWAP",
     "status": "live",
     "as_of_utc": "2026-11-19T00:00:00Z",
-    "generated_at_utc": "2026-11-19T01:06:58Z",
+    "generated_at_utc": "2026-11-19T01:26:13Z",
     "history_sources": [
       "OKX Public v5 Keyless Archive"
     ],
@@ -26,7 +26,7 @@
       "oi_delta_24h_pct": 4.02,
       "gk_vol_24h_ann_pct": 54.28,
       "taker_buy_ratio": 0.5344,
-      "live_l2_imbalance": 0.9598
+      "live_l2_imbalance": 0.2468
     },
     "z_vector": {
       "funding_rate": -1.04,
